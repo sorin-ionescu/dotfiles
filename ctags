@@ -1,0 +1,13 @@
+--python-kinds=-iv
+--langdef=js
+--langmap=js:.js
+--regex-js=/([A-Za-z0-9._$]+)[ \t]*[:=][ \t]*\{/\1/,object/
+--regex-js=/([A-Za-z0-9._$()]+)[ \t]*[:=][ \t]*function[ \t]*\(/\1/,function/
+--regex-js=/function[ \t]+([A-Za-z0-9._$]+)[ \t]*([^)])/\1/,function/
+--regex-js=/([A-Za-z0-9._$]+)[ \t]*[:=][ \t]*\[/\1/,array/
+--regex-js=/([^= ]+)[ \t]*=[ \t]*[^"]'[^']*/\1/,string/
+--regex-js=/([^= ]+)[ \t]*=[ \t]*[^']"[^"]*/\1/,string/
+--exclude='**/ckeditor'
+--langdef=zsh
+--langmap=zsh:.zsh
+--regex-zsh=/(function[ \t]+)?([A-Za-z0-9_\-]+)[ \t]*([^\)]\))?([ \t]*)?\{/\2/f,function/
