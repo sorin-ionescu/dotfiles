@@ -1,0 +1,6 @@
+open [-a (<application>|<file>) | -b <identifier> | -e <file> | -t <file> | -R <file> | --reveal <file> | -f];
+open [-a <application>] [-g | --background | -n | --new | -W | --wait-apps] [--args] <arguments>;
+open [-h <file> | --header <file>];
+application = !mdfind 'kMDItemKind == Application' | awk 'BEGIN {FS=OFS="/"} {print $NF}' | sed 's/ /\\ /g';
+identifier = !mdfind 'kMDItemKind == Application' | sed -e 's/ /\\ /g' -e "s:':\\\':g" | xargs -n 1 mdls | grep 'kMDItemCFBundleIdentifier' | cut -d '=' -f 2 | sed 's/^ "\(.*\)"$/\1/g'
+

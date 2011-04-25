@@ -1,0 +1,7 @@
+attach [(--help|-h) | (--list|-l) | (--sockets|-L) | (--version|-v)];
+attach <opts> <session>;
+attach <opts> <command>;
+session = !attach -l;
+opts = [(--session|-s) <session> | (--char|-c) <char> | (--redraw|-r) <modes> | (--detached|-d) | (--no-detach|-D) | (--no-suspend|-Z)] ...;
+modes = (none | ctrl_l | winch);
+command = !echo $PATH | tr ':' "\n" | xargs -I '{}' find '{}' \( -type f -o -type l \) -perm '++x' 2>/dev/null | awk -F '/' '{ print $NF }' | sort -u | uniq

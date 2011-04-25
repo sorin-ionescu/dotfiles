@@ -1,0 +1,2 @@
+pkgutil [--pkgs | --help | --files <package> | --lsbom <package> | --unlink <package> | --forget <package>];
+package = !pkgutil --pkgs;
