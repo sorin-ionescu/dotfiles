@@ -1,0 +1,761 @@
+# -----------------------------------------------------------------------------
+#          FILE:  .nanorc
+#   DESCRIPTION:  Nano configuration file.
+#        AUTHOR:  Sorin Ionescu <sorin.ionescu@gmail.com>
+#       VERSION:  1.0
+# -----------------------------------------------------------------------------
+
+
+# -----------------------------------------------------------------------------
+# Options
+# -----------------------------------------------------------------------------
+set autoindent
+# Use auto-indentation.
+
+# unset backup
+# Do not create backup files in filename~.
+
+set backupdir directory ~/.backup/
+# Set the directory where nano puts unique backup files if file backups are enabled.
+
+unset backwards
+# Do not do backwards searches by default.
+
+set boldtext
+# Use bold text instead of reverse video text.
+
+set brackets string ""')>]}"
+# Set the characters treated as closing brackets when justifying paragraphs. They cannot contain blank characters. Only closing punctuation, optionally followed by closing brackets, can end sentences. The default value is ""')>]}".
+
+set casesensitive
+# Do case sensitive searches by default.
+
+set const
+# Constantly display the cursor position in the status bar.
+
+unset cut
+# Do not use cut to end of line by default.
+
+#set fill n
+# Wrap lines at column number n. If n is 0 or less, the maximum line length will be the screen width less n columns. The default value is -8.
+
+set historylog
+# Enable ~/.nano_history for saving and reading search/replace strings.
+
+set matchbrackets string "(<[{)>]}"
+# Set the opening and closing brackets that can be found by bracket searches. They cannot contain blank characters. The former set must come before the latter set, and both must be in the same order. The default value is "(<[{)>]}".
+
+unset morespace
+# Not allow use of the blank line below the titlebar as extra editing space.
+
+unset mouse
+# Disable mouse support, if available for your system. When enabled, mouse clicks can be used to place the cursor, set the mark (with a double click), and execute shortcuts. The mouse will work in the X Window System, and on the console when gpm is running.
+
+set multibuffer
+# Allow inserting files into their own buffers.
+
+set noconvert
+# Don't convert files from DOS/Mac format.
+
+unset nofollow
+# Follow symlinks when writing files.
+
+unset nohelp
+# Display the help lists at the bottom of the screen.
+
+unset nonewlines
+# Add newlines to the ends of files.
+
+unset nowrap
+# Wrap text at all.
+
+#set operatingdir directory
+# nano will only read and write files inside directory and its subdirectories. Also, the current directory is changed to here, so files are inserted from this diractory. By default, the operating directory feature is turned off.
+
+unset preserve
+# Don't Preserve the XON and XOFF keys (^Q and ^S).
+
+#set punct string
+# Set the characters treated as closing punctuation when justifying paragraphs. They cannot contain blank characters. Only closing punctuation, optionally followed by closing brackets, can end sentences. The default value is "!.?".
+
+unset quickblank
+# Don't do quick statusbar blanking. Statusbar messages will disappear after 1 keystroke instead of 25.
+
+# set quotestr string
+# I don't use pico/nano for email, so this doesn't apply to me
+# The email-quote string, used to justify email-quoted paragraphs. This is an extended regular expression if your system supports them, otherwise a literal string. The default value is "^([ \t]*[#:>\|}])+" if you have extended regular expression support, or "> " otherwise. Note that '\t' stands for a literal Tab character.
+
+unset rebinddelete
+# Don'tiInterpret the Delete key differently so that both Backspace and Delete work properly. You should only need to use this option if Backspace acts like Delete on your system.
+
+unset rebindkeypad
+# Don't interpret the numeric keypad keys so that they all work properly. You should only need to use this option if they don't, as mouse support won't work properly with this option enabled.
+
+unset regexp
+# Don't do extended regular expression searches by default.
+
+set smarthome
+# Make the Home key smarter. When Home is pressed anywhere but at the very beginning of non-whitespace characters on a line, the cursor will jump to that beginning (either forwards or backwards). If the cursor is already at that position, it will jump to the true beginning of the line.
+
+set smooth
+# Use smooth scrolling by default.
+
+set speller aspell
+# Use spelling checker spellprog instead of the built-in one, which calls spell.
+
+set suspend
+# Allow nano to be suspended.
+
+set tabsize 2
+# Use a tab size of 3 columns. The value of n must be greater than 0. The default value is 8.
+
+unset tabstospaces
+# Don't convert typed tabs to spaces.
+
+unset tempfile
+# Don't save automatically on exit, always prompt.
+
+unset view
+# Allow file modification.
+
+#set whitespace string
+# Set the two characters used to display the first characters of tabs and spaces. They must be single-column characters.
+
+unset wordbounds
+# Do not treat punctuation characters as part of a word.
+
+
+# -----------------------------------------------------------------------------
+# Syntax Highlighting
+# -----------------------------------------------------------------------------
+
+#
+# BASH
+#
+# Bram Schoenmakers <me@bramschoenmakers.nl>
+# Version 1.1
+#
+syntax "bash" "\.sh$"
+
+# Some Bash syntax first
+
+# Control
+color magenta "\<(if|else|for|function|case|esac|in|select|until|while|do|elif|then|set|\.|done|fi)\>"
+
+# Brackets and redirects
+color yellow "[(){}[;|<>]"
+color yellow "\]"
+
+# Builtins
+color red "\<(source|alias|bg|bind|break|builtin|cd|command|compgen|complete|continue|dirs|disown|echo|enable|eval|exec|exit|fc|fg|getopts|hash|help|history|jobs|kill|let|logout|popd|printf|pushd|pwd|return|set|shift|shopt|suspend|test|times|trap|type|ulimit|umask|unalias|wait)\>"
+
+# Unix Commands
+color red "\<(arch|awk|bash|bunzip2|bzcat|bzcmp|bzdiff|bzegrep|bzfgrep|bzgrep|bzip2|bzip2recover|bzless|bzmore|cat|chattr|chgrp|chmod|chown|chvt|cp|date|dd|deallocvt|df|dir|dircolors|dmesg|dnsdomainname|domainname|du|dumpkeys|echo|ed|egrep|false|fgconsole|fgrep|fuser|gawk|getkeycodes|gocr|grep|groups|gunzip|gzexe|gzip|hostname|igawk|install|kbd_mode|kbdrate|killall|last|lastb|link|ln|loadkeys|loadunimap|login|ls|lsattr|lsmod|lsmod.old|mapscrn|mesg|mkdir|mkfifo|mknod|mktemp|more|mount|mv|nano|netstat|nisdomainname|openvt|pgawk|pidof|ping|ps|pstree|pwd|rbash|readlink|red|resizecons|rm|rmdir|run-parts|sash|sed|setfont|setkeycodes|setleds|setmetamode|setserial|sh|showkey|shred|sleep|ssed|stat|stty|su|sync|tar|tempfile|touch|true|umount|uname|unicode_start|unicode_stop|unlink|utmpdump|uuidgen|vdir|wall|wc|ypdomainname|zcat|zcmp|zdiff|zegrep|zfgrep|zforce|zgrep|zless|zmore|znew|zsh)\>"
+
+# More Unix Commands
+color red "\<(aclocal|aconnect|aplay|apm|apmsleep|apropos|ar|arecord|as|as86|autoconf|autoheader|automake|awk|basename|bc|bison|c\+\+|cal|cat|cc|cdda2wav|cdparanoia|cdrdao|cd-read|cdrecord|chfn|chgrp|chmod|chown|chroot|chsh|clear|cmp|co|col|comm|cp|cpio|cpp|cut|dc|dd|df|diff|diff3|dir|dircolors|directomatic|dirname|du|env|expr|fbset|file|find|flex|flex\+\+|fmt|free|ftp|funzip|fuser|g\+\+|gawk|gc|gcc|gdb|getent|getopt|gettext|gettextize|gimp|gimp-remote|gimptool|gmake|gs|head|hexdump|id|install|join|kill|killall|ld|ld86|ldd|less|lex|ln|locate|lockfile|logname|lp|lpr|ls|lynx|m4|make|man|mkdir|mknod|msgfmt|mv|namei|nasm|nawk|nice|nl|nm|nm86|nmap|nohup|nop|od|passwd|patch|pcregrep|pcretest|perl|perror|pidof|pr|printf|procmail|prune|ps2ascii|ps2epsi|ps2frag|ps2pdf|ps2ps|psbook|psmerge|psnup|psresize|psselect|pstops|rcs|rev|rm|scp|sed|seq|setterm|shred|size|size86|skill|slogin|snice|sort|sox|split|ssh|ssh-add|ssh-agent|ssh-keygen|ssh-keyscan|stat|strings|strip|sudo|suidperl|sum|tac|tail|tee|test|tr|uniq|unlink|unzip|updatedb|updmap|uptime|users|vmstat|w|wc|wget|whatis|whereis|which|who|whoami|write|xargs|yacc|yes|zip|zsoelim)\>"
+
+# Strings
+color blue "\"(\\.|[^\"])*\""
+color blue "'(\\.|[^\"])*'"
+
+# Variables, keep it below the strings, such that vars are highlighted inside strings.
+color cyan start="[$@%]" end="[[:alnum:]]*"
+
+# Comments
+color brightblack "#.*$"
+
+
+#
+# PHP
+#
+syntax "php" "\.php$" "\.php[2345s]$" "\.phtml$"
+#functions
+color brightmagenta "([A-Za-z0-9])"
+#numbers
+color brightblue "[0-9]"
+#special
+color brightwhite "(^|[^A-Za-z0-9])(<\?php|\?>|var|and|or|default|class|extends|true|false|global|function|new|switch|case|break|next|prev|elseif|if|else|foreach|for|as|do|while|exit|die|declare|require_once|require|include_once|include|return|echo|static|array|isset)([^A-Za-z0-9])"
+#types
+color brightred "([^A-Za-z0-9])|[^A-Za-z](null|int|string|float|bool|object|resource)[^A-Za-z0-9_]+[^A-Za-z]"
+#strings
+color brightyellow ""(\\.|[^\"])*""
+color brightyellow "'(\\.|[^\'])*'"
+#Variables
+color brightcyan "\$[]\[A-Za-z0-9_'\"]*"
+#comments
+color green "//.*"
+color green "#.*"
+color green start="/\*" end="\*/"
+
+
+#
+# Python
+#
+syntax "python" "\.py$"
+icolor brightblue "def [0-9A-Z_]+"
+color brightcyan "\<(and|assert|break|class|continue|def|del|elif|else|except|exec|finally|for|from|global|if|import|in|is|lambda|map|not|or|pass|print|raise|return|try|while)\>"
+color brightgreen "['][^']*[^\\][']" "[']{3}.*[^\\][']{3}"
+color brightgreen "["][^"]*[^\\]["]" "["]{3}.*[^\\]["]{3}"
+color brightgreen start=""""[^"]" end=""""" start="'''[^']" end="'''"
+color brightred "#.*$"
+
+
+#
+# Java
+#
+syntax "java" "\.java$"
+color green "\<(boolean|byte|char|double|float|int|long|new|short|this|transient|void)\>"
+color red "\<(break|case|catch|continue|default|do|else|finally|for|if|return|switch|throw|try|while)\>"
+color cyan "\<(abstract|class|extends|final|implements|import|instanceof|interface|native|package|private|protected|public|static|strictfp|super|synchronized|throws|volatile)\>"
+color red ""[^"]*""
+color yellow "\<(true|false|null)\>"
+color blue "//.*"
+color blue start="/\*" end="\*/"
+color brightblue start="/\*\*" end="\*/"
+color ,green "[[:space:]]+$"
+
+
+#
+# C
+#
+# Author:  Josef 'Jupp' Schugt, jupp(a)rubyforge.org
+# License: GPL 2  or later
+# Version: 2004-02-25
+#
+syntax "c-file" "\.(c|h)$"
+
+# Default
+color white "^.+$"
+
+# Trigraphs
+color brightyellow "\?\?[-=(\\)'<!>]"
+
+# Decimal, cotal and hexadecimal numbers
+color red "\<[-+]?([1-9][0-9]*|0[0-7]*|0x[0-9a-fA-F]+)([uU][lL]?|[lL][uU]?)?\>"
+
+# Floating point number with at least one digit before decimal point
+color red "\<[-+]?([0-9]+\.[0-9]*|[0-9]*\.[0-9]+)([EePp][+-]?[0-9]+)?[fFlL]?"
+color red "\<[-+]?([0-9]+[EePp][+-]?[0-9]+)[fFlL]?"
+# Keywords
+color brightyellow "\<(break|case|continue|default|do|else|for|goto|if)\>"
+color brightyellow "\<(inline|return|sizeof|switch|typedef|while)\>"
+
+# Storage classes
+color cyan "\<(auto|register|static|extern)\>"
+
+# Type qualifiers
+color cyan "\<(const|restrict|volatile)\>"
+
+# Enumerations, structs, and unions
+color cyan "\<(enum|struct|union)\>"
+
+# Type specifiers
+color cyan "\<(char|double|float|int|long|short|(un)?signed|void)\>"
+color cyan "\<(_(Bool|Complex|Imaginary)|FILE|va_list|wc(trans|type)_t)\>"
+color cyan "\<(u?int((_fast|_least)?(8|16|32|64)|max|ptr)|w(char|int))_t|\>"
+
+# Preprocessor directives: Conditions
+color red "^[ \t]*#(ifn?def|else|endif)\>"
+color red "^[ \t]*#(if|elif)[ \t]*!?[ \t]*(defined)?\>"
+
+# Preprocessor directive: Set line number
+color yellow "^[ \t]*#line\>.*$"
+color red    "^[ \t]*#line\>"
+
+# Preprocessor: Issue error message
+color yellow "^[ \t]*#error\>.*$"
+color red    "^[ \t]*#error\>"
+
+# Preprocessor: Pragma (don't ask :-)
+color yellow "^[ \t]*#pragma\>.*$"
+color red    "^[ \t]*#pragma\>"
+
+# Preprocessor: Predefined macros
+color red "__(LINE|FILE|func|DATE|TIME|STD(C|_HOSTED|_VERSION))__"
+
+# Preprocessor directives: Definition
+color red "^[ \t]*#(define|undef)\>"
+
+# Preprocessor directive: File inclusion
+color yellow "^[ \t]*#include[ \t]*(\"[^"]*\"|<[^>]*>)"
+color red    "^[ \t]*#include\>"
+
+# String
+color yellow "L?\"(\\"|[^"])*\""
+color yellow "L?'(\'|[^'])*'"
+
+# Escapes
+color red "\\[0-7][0-7]?[0-7]?|\\x[0-9a-fA-F]+|\\[abfnrtv'"\?\\]"
+
+# Comments
+color magenta start="/\*" end="\*/"
+color magenta "//.*$"
+
+
+#
+# Ruby
+#
+# Author:  Josef 'Jupp' Schugt, jupp(a)rubyforge.org
+# License: GPL 2  or later
+# Version: 2004-02-27
+#
+syntax "ruby" ".*\.*rb$"
+
+# General
+color white ".+"
+# Operators
+color brightyellow "::|\*\*|!|~|\*|/|%|\+|-|&|<<|>>|\|\^|>|>=|<|<=|<=>|\|\||!=|=~|!~|&&|\+=|-=|=|\.\.|\.\.\.|\<(not|and|or)\>"
+
+# Keywords
+color brightyellow "\<(BEGIN|END|alias|and|begin|break|case|class|def|defined|do|else|elsif|end|ensure|for|if|in|module)\>"
+color brightyellow "\<(next|not|or|redo|rescue|retry|return|self|super|then|undef|unless|until|when|while|yield)\>"
+
+# false, nil, true
+color magenta "\<(false|nil|true)\>"
+
+# Above must not match 'nil?'
+color white "\<nil\?"
+
+# external stuff
+color brightgreen "(\<(load|require|include)|%q|%!|%Q|%r|%x)\>"
+
+# Iterators
+color brightgreen "\|\w+(,[ \t]*\w+)*\|"
+
+# Constants
+color yellow "\<[A-Z]\w*\>"
+
+# Variables starting with '$', '@' or '@@'
+color white "(\$|@@?)\w+\>"
+
+# Function names ending in '!' or '?'
+color white "\w+(!|\?)"
+
+# Symbols
+color yellow "([ \t]|^):(@|@@|\$)?\w+\>"
+# Strings
+color green "\"(\\.|[^\\\"])*\"|'(\\.|[^\\'])*'"
+
+# Strings
+color green "\"(\\.|[^\\\"])*\"|'(\\.|[^\\'])*'"
+
+# Backticks
+color green "`(\\.|[^\\\"])*`"
+
+# Regular expressions
+color green "/(\\.|[^\\/])*/[imox]*"
+
+# Escapes
+color red "\\[0-7][0-7][0-7]|\\x[0-9a-fA-F][0-9a-fA-F]|\\[abefnrs]|(\\c|\\C-|\\M-|\\M-\\C-)."
+
+# Expression substitution
+color red "#\{[^}]*\}|#[@$]\w+"
+
+# Simple comments
+color cyan         "#([^{$@].*)?$"
+
+# Shebang
+color brightcyan   "^#!.*"
+
+# Multiline comments
+color cyan         start="^=begin" end="^=end"
+
+
+#
+# XML
+#
+# Author:  Josef 'Jupp' Schugt, jupp(a)rubyforge.org
+# Secondary author: Barry Burns, bburnsatsynsetdotnet
+# License: GPL 2  or later
+# Version: 2007-09-28
+#
+syntax "ml" ".*\.([jrs]?htm?|xml|xul|rdf|rss|xbl|sgml?)$"
+color white "^.+$"
+# Attribute names
+color green start="<" end=">"
+# Attribute text
+color brightgreen ""[^"]+""
+# Tag names
+color brightcyan "<[^> ]+"
+# Alligators
+color cyan "<"
+color cyan ">"
+# DTDs
+color brightyellow start="<!DOCTYPE" end="[/]?>"
+# Comments
+color white start="<!--" end="-->"
+# Entities
+color red "&[^;]*;"
+# Preprocessing instructions
+color brightred "<\?.+\?>"
+color red "<\?"
+color red "\?>"
+# CDATA
+color white start="<!\[CDATA\[" end="\]\]>"
+color brightwhite "<!\[CDATA\["
+color brightwhite "\]\]>"
+
+
+#
+# Perl
+#
+# Author: David Benbennick
+# Version: 2003-02-28
+#
+syntax "perl" "\.p[lm]$"
+color red "\<(accept|alarm|atan2|bin(d|mode)|c(aller|h(dir|mod|op|own|root)|lose(dir)?|onnect|os|rypt)|d(bm(close|open)|efined|elete|ie|o|ump)|e(ach|of|val|x(ec|ists|it|p))|f(cntl|ileno|lock|ork)|get(c|login|peername|pgrp|ppid|priority|pwnam|(host|net|proto|serv)byname|pwuid|grgid|(host|net)byaddr|protobynumber|servbyport)|([gs]et|end)(pw|gr|host|net|proto|serv)ent|getsock(name|opt)|gmtime|goto|grep|hex|index|int|ioctl|join|keys|kill|last|length|link|listen|local(time)?|log|lstat|m|mkdir|msg(ctl|get|snd|rcv)|next|oct|open(dir)?|ord|pack|pipe|pop|printf?|push|q|qq|qx|rand|re(ad(dir|link)?|cv|do|name|quire|set|turn|verse|winddir)|rindex|rmdir|s|scalar|seek|seekdir|se(lect|mctl|mget|mop|nd|tpgrp|tpriority|tsockopt)|shift|shm(ctl|get|read|write)|shutdown|sin|sleep|socket(pair)?|sort|spli(ce|t)|sprintf|sqrt|srand|stat|study|substr|symlink|sys(call|read|tem|write)|tell(dir)?|time|tr|y|truncate|umask|un(def|link|pack|shift)|utime|values|vec|wait(pid)?|wantarray|warn|write)\>"
+color magenta "\<(continue|else|elsif|do|for|foreach|if|unless|until|while|eq|ne|lt|gt|le|ge|cmp|x|my|our|sub|use|package|can|isa)\>"
+color cyan start="address@hidden" end="( |\\W|-)"
+color yellow "".*"|qq\|.*\|"
+color white "[sm]/.*/"
+color white start="(^use| = new)" end=";"
+color green "#.*"
+color yellow start="<< 'STOP'" end="STOP"
+
+
+
+# ==========================================================================
+# >>>>> Web Development >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+# ==========================================================================
+
+#
+# CSS
+#
+# Author:  Simon Rupf, simon.rupf(a)int-ag.ch
+# License: GPL 2  or later
+# Version: 2005-02-14
+#
+syntax "css" "\.css$"
+color brightred     "."
+color brightyellow  start="\{" end="\}"
+color brightwhite           start=":" end="[;^\{]"
+color brightblue    ":active|:focus|:hover|:link|:visited|:link|:after|:before|$"
+color brightblue    start="\/\*" end="\\*/"
+color green         ";|:|\{|\}"
+
+
+#
+# JavaScript
+#
+# by Barry Burns <bburns at synset dot net>
+# License: GPL 2 or later
+#
+syntax "ecmascript" "\.js$"
+color white "^.+$"
+# Identifiers
+color brightcyan "\b[a-zA-Z\$_][a-zA-Z0-9\$_]*\b"
+# Braces, brackets and parentheses
+color brightmagenta "\[|\]|\(|\)|\{|\}"
+# Integers, floats
+color brightblue "\b[0-9]+(.[0-9]+)?\b"
+# Reserved words
+color brightyellow "\b(break|case|catch|continue|default|delete|do|else|finally|for|function|if|in|instanceof|new|return|switch|this|throw|try|typeof|var|void|while|with)\b"
+# Operations
+color brightgreen "\||~|!|\.|\*|\+|-|=|<|>|/"
+# Strings
+color blue ""[^"]*""
+color blue "'[^']*'"
+# Comments
+color brightwhite "//[^\n]*"
+color brightwhite start="/\*" end="\*/"
+
+
+#
+# HTML
+#
+syntax "HTML" "\.html$"
+# list of tags
+color brightcyan "<[\/]?(html|head|title|metal|link|meta|center|table|tr|td|h[1-6])[>]?"
+# list of attributes
+color cyan "(alt|src|type|onclick|name|content|id|class|style)"
+# text in quotes
+color brightwhite ""(\\.|[^\"])*""
+# comments
+color yellow start="<!--" end="-->"
+# html entities
+color red "&[^; ]*;"
+
+
+#
+# Assembly
+#
+syntax "asm" "\.(S|s|asm)$"
+color red "\<[A-Z_]{2,}\>"
+color brightgreen "\.(data|subsection|text)"
+color green "\.(align|file|globl|global|hidden|section|size|type|weak)"
+color brightyellow "\.(ascii|asciz|byte|double|float|hword|int|long|short|single|struct|word)"
+icolor brightred "^[[:space:]]*[.0-9A-Z_]*:"
+color brightcyan "^[[:space:]]*#[[:space:]]*(define|undef|include|ifn?def|endif|elif|else|if|warning|error)"
+## Highlight strings (note: VERY resource intensive)
+color brightyellow "<[^=        ]*>" ""(\\.|[^"])*""
+color brightyellow start=""(\\.|[^"])*\\[[:space:]]*$" end="^(\\.|[^"])*""
+## Highlight comments
+color brightblue "//.*"
+color brightblue start="/\*" end="\*/"
+## Highlight trailing whitespace
+color ,green "[[:space:]]+$"
+
+
+
+# ==========================================================================
+# >>>>> Generic Linux Files >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+# ==========================================================================
+
+#
+# Xorg.conf
+#
+syntax "xorg" "xorg\.conf$"
+color brightwhite "(Section|EndSection|Sub[sS]ection|EndSub[sS]ection)"
+# keywords
+color yellow "[^A-Za-z0-9](Identifier|Screen|InputDevice|Option|RightOf|LeftOf|Driver|RgbPath|FontPath|ModulePath|Load|VendorName|ModelName|BoardName|BusID|Device|Monitor|DefaultDepth|View[pP]ort|Depth|Virtual|Modes|Mode|DefaultColorDepth|Modeline|\+vsync|\+hsync|HorizSync|VertRefresh)[^A-Za-z0-9]"
+# numbers
+color magenta "[0-9]"
+# strings
+color green ""(\\.|[^\"])*""
+# comments
+color blue "#.*"
+
+
+#
+# *.conf file syntax highlighting
+#
+syntax "conf" "\.(c(onf|nf|fg))$"
+
+# string
+icolor yellow ""(\\.|[^"])*""
+
+# variable name & value
+icolor brightyellow start="=" end="$"
+icolor magenta start="(^|[[:space:]])[0-9a-z-]" end="="
+
+# bracket/parenthesis
+icolor brightred "(^|[[:space:]])((\[|\()[0-9a-z_!@#$%^&*-]+(\]|\)))"
+
+# number
+color green "[[:space:]][0-9.KM]+"
+
+# comment
+color cyan start="(^|[[:space:]])(#|;).*$" end="$"
+color brightblue "(^|[[:space:]])(#|;)"
+
+
+#
+# Patch Files
+#
+syntax "patch" "\.(patch|diff)$"
+color brightgreen "^\+.*"
+color green "^\+\+\+.*"
+color brightblue "^ .*"
+color brightred "^-.*"
+color red "^---.*"
+color brightyellow "^@@.*"
+color magenta "^diff.*"
+
+
+#
+# Makefile
+#
+syntax "makefile" "(m|M)akefile$" "\.mak$"
+#icolor yellow start="^[[:space:]]*[.0-9A-Z_]" end="\=[[:space:]]|\:|\:\:|\/"
+color brightgreen "((C|CXX|LD)FLAGS)|LIBADD|LIBS|include"
+icolor cyan start="\{" end="\}"
+icolor cyan start="\(" end="\)"
+color brightyellow "\$"
+color green "#.*$"
+color red "[:=]"
+color magenta "\<(if|ifeq|else|endif)\>"
+color blue "\$\{.*}"
+color brightblue "\w+:"
+color green "#.*$"
+
+
+
+
+# ==========================================================================
+# >>>>> Gentoo Specific >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+# ==========================================================================
+
+#
+# Gentoo Ebuilds and Eclasses
+#
+syntax "ebuild" "\.e(build|class)$"
+## All the standard portage functions
+color brightgreen "^src_(unpack|compile|install|test)" "^pkg_(config|nofetch|setup|(pre|post)(inst|rm))"
+## Highlight bash related syntax
+color green "\<(case|do|done|elif|else|esac|exit|fi|for|function|if|in|local|read|return|select|shift|then|time|until|while)\>"
+color green "(\{|\}|\(|\)|\;|\]|\[|`|\\|\$|<|>|!|=|&|\|)"
+color green "-(e|d|f|r|g|u|w|x|L)\>"
+color green "-(eq|ne|gt|lt|ge|le|s|n|z)\>"
+## Highlight variables ... official portage ones in red, all others in bright red
+color brightred "\$\{?[a-zA-Z_0-9]+\}?"
+color red "\<(ARCH|HOMEPAGE|DESCRIPTION|IUSE|SRC_URI|LICENSE|SLOT|KEYWORDS|FILESDIR|WORKDIR|(P|R)?DEPEND|PROVIDE|DISTDIR|RESTRICT)\>"
+color red "\<(S|D|T|PV|PF|P|PN|A)\>" "\<C(XX)?FLAGS\>"
+## Highlight portage commands
+color magenta "\<use(_(with|enable))?\> [a-z0-9X ]*" "inherit.*"
+color brightblue "e(begin|end|conf|install|make|warn|infon?|error|patch)"
+color brightblue "\<die\>" "\<use((v|_(with|enable)))?\>" "\<inherit\>" "\<has\>" "\<(has|best)_version\>" "\<unpack\>"
+color brightblue "\<(do|new)(ins|s?bin|doc|lib(\.so|\.a)|man|info|exe)\>"
+color brightblue "\<do(python|sed|dir|hard|sym|html|jar|mo)\>" "\<keepdir\>"
+color brightblue "prepall(docs|info|man|strip)" "prep(info|lib|lib\.so|man|strip)"
+color brightblue "\<(doc|ins|exe)into\>" "\<f(owners|perms)\>" "\<(exe|ins|dir)opts\>"
+## Highlight common commands used in ebuilds
+color blue "\<make\>" "\<(cat|cd|chmod|chown|cp|echo|env|export|grep|let|ln|mkdir|mv|rm|sed|set|tar|touch|unset)\>"
+## Highlight comments (doesnt work that well)
+color yellow "#.*$"
+## Highlight strings (doesnt work that well)
+color brightyellow "'(\\.|[^\"])*'" "'(\\.|[^'])*'"
+
+
+#
+# /etc/portage/*
+#
+syntax "/etc/portage" "\.(keywords|mask|unmask|use)(/.+)?$"
+## Base text:
+color green "^.+$"
+## Use flags:
+color brightred "[[:space:]]+\+?[a-zA-Z0-9_-]+"
+color brightblue "[[:space:]]+-[a-zA-Z0-9_-]+"
+## Likely version numbers:
+color magenta "-[[:digit:]].*([[:space:]]|$)"
+## Accepted arches:
+color white "[~-]?\<(alpha|amd64|arm|hppa|ia64|mips|ppc|ppc64|s390|sh|sparc|x86$)"
+color white "[[:space:]][\*~-]?\*"
+## Categories:
+color cyan "^[[:space:]]*.*/"
+## Masking regulators:
+color brightmagenta "^[[:space:]]*(=|~|<|<=|=<|>|>=|=>)"
+## Comments:
+color yellow "#.*$"
+
+
+#
+# Paludis
+#
+syntax "bashrc" "bashrc$"
+## Base text:
+color brightblack "^.+$"
+## sh syntax:
+color brightwhite "\<(case|do|done|elif|else|esac|exit|fi|for|function|if|in|local|read|return|select|shift|then|time|until|while)\>"
+icolor magenta "(.+\)|\[.+\])"
+color brightwhite "(\{|\}|\(|\)|\;|\]|\[|`|\\|\$|<|>|!|==|&|\|)"
+color brightwhite "-[Ldefgruwx]\>"
+color brightwhite "-(eq|ne|gt|lt|ge|le|s|n|z)\>"
+color brightblue "\<(cat|cd|chmod|chown|cp|echo|env|export|grep|install|let|ln|make|mkdir|mv|rm|sed|set|tar|touch|umask|unset)\>"
+icolor brightred "\$\{?[0-9A-Z_!@#$*?-]+\}?"
+color ,green "[[:space:]]+$"
+color green "\".*\""
+color brightwhite "case[[:space:]]\".+\""
+color brightgreen "\$\{.+\}"
+## Package name:
+color brightmagenta "\$\{PN\}"
+## Keywords:
+color brightwhite "(CHOST|CFLAGS|CXXFLAGS|MAKEOPTS)="
+color white "(SKIP_FUNCTIONS|PATH|CCACHE_SIZE|CCACHE_DIR|PALUDIS_USE_SAFE_RESUME)="
+## Comments:
+color brightred "#.*$"
+color yellow "^#.*$"
+color brightyellow "^##[[:space:]].*$"
+
+syntax "license-use" "(licenses|use)\.conf$"
+## Base text:
+color brightblack "^.+$"
+## Package name:
+color brightblue "/.*[[:space:]]"
+## Categories:
+color cyan "^.*/"
+## Version number:
+color white "-[[:digit:]]+(\.|[[:digit:]]|-.)*([[:space:]]|::)"
+## Repository name:
+color magenta "::.*[[:space:]]"
+## licenses and use:
+color green "[[:space:]][^[:space:]]*"
+color red "[[:space:]]-[^[:space:]]*"
+## Masking regulators:
+color brightred "^(<|<=|=|>=|>)*"
+color brightwhite "^(<|<=|=|>=|>)"
+## Additional variables:
+color brightgreen "(ALSA_CARDS|INPUT_DEVICES|LANGUAGE|LINGUAS|VIDEO_CARDS|PALUDIS_HOOKS):?"
+## Mark lines with spaces at end of it:
+color brightred ".*[[:space:]]$"
+## Comments:
+color brightred "#.*$"
+color yellow "^#.*$"
+color brightyellow "^##[[:space:]].*$"
+
+syntax "keywords" "keywords\.conf$"
+## Base text:
+color brightblack "^.+$"
+## Package name:
+color brightblue "/.*[[:space:]]"
+## Categories:
+color cyan "^.*/"
+## Version number:
+color white "-[[:digit:]]+(\.|[[:digit:]]|-.)*([[:space:]]|::)"
+## Repository name:
+color magenta "::.*[[:space:]]"
+## Accepted arches:
+color green "[[:space:]][~]?(alpha|amd64|arm|hppa|ia64|mips|ppc|ppc64|s390|sh|sparc|x86|x86-fbsd|\*)"
+color red "-\*"
+## Masking regulators:
+color brightred "^(<|<=|=|>=|>)*"
+color brightwhite "^(<|<=|=|>=|>)"
+## Mark lines with spaces at end of it:
+color brightred ".*[[:space:]]$"
+## Comments:
+color brightred "#.*$"
+color yellow "^#.*$"
+color brightyellow "^##[[:space:]].*$"
+
+syntax "mask-unmask" "package_(mask|unmask)\.conf$"
+## Base text:
+color brightblack "^.+$"
+## Package name:
+color brightblue "/.*"
+## Categories:
+color cyan "^.*/"
+## Version number:
+color white "-[[:digit:]]+(\.|[[:digit:]]|-.)*($|::)"
+## Repository name:
+color magenta "::.*$"
+## Masking regulators:
+color brightred "^(<|<=|=|>=|>)*"
+color brightwhite "^(<|<=|=|>=|>)"
+## Mark lines with spaces at end of it:
+color brightred ".*[[:space:]]$"
+## Comments:
+color brightred "#.*$"
+color yellow "^#.*$"
+color brightyellow "^##[[:space:]].*$"
+
+syntax "mirrors" "mirrors\.conf$"
+## Base text:
+color red "^.+$"
+## Serwer name:
+color brightwhite "^.*[[:space:]]"
+## Adress
+color brightblue "[[:space:]](ftp://|http://).*$"
+## Mark lines with spaces at end of it:
+color brightred ".*[[:space:]]$"
+## Comments:
+color brightred "#.*$"
+color yellow "^#.*$"
+color brightyellow "^##[[:space:]].*$"
+
+syntax "repositories" "repo"
+## Base text:
+color brightblack "^.+$"
+## Parameters:
+color magenta "=[[:space:]].+$"
+color brightwhite "^.*[[:space:]]=[[:space:]]"
+## Path:
+color green "/.+"
+color brightgreen "\$\{.*\}"
+## Adress:
+color brightblue "(svn\+https|svn\+http|http|rsync)://.*$"
+## Mark lines with spaces at end of it:
+color brightred ".*[[:space:]]$"
+## Comments:
+color brightred "#.*$"
+color yellow "^#.*$"
+color brightyellow "^##[[:space:]].*$"
