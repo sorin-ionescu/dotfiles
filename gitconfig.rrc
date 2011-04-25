@@ -1,0 +1,60 @@
+[user]
+	name = Sorin Ionescu
+	email = sorin.ionescu@gmail.com
+[color]
+	ui = auto
+[format]
+	numbered = auto
+[core]
+	legacyheaders = false
+	excludesfile = ~/.gitignore
+	whitespace = trailing-space,space-before-tab
+	quotepath = false
+	autocrlf = input
+	safecrlf = true
+[apply]
+	whitespace = warn
+[repack]
+	usedeltabaseoffset = true
+[branch]
+	autosetupmerge = true
+[pager]
+	status = false
+[github]
+	user = {{ keychain['github.com/api'].account }}
+	token = {{ keychain['github.com/api'].password }}
+[tig]
+	show-date = relative
+	author-width = 8
+	show-rev-graph = yes
+[advice]
+	pushNonFastForward = false
+	statusHints = false
+[push]
+	default = tracking
+[rerere]
+	enabled = true
+[diff]
+	tool = vimdiff
+	guitool = gvimdiff
+	mnemonicprefix = true
+	renames = copies
+[difftool]
+	prompt = false
+[merge]
+	; conflictstyle = diff3
+	; tool = vimdiff3
+	conflictstyle = merge
+	tool = threesome
+	stat = true
+[mergetool]
+	prompt = false
+[mergetool "vimdiff3"]
+	cmd = "vim -f -d -c 'wincmd J' -c 'resize 10' \"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\""
+	trustExitCode = false
+[mergetool "gvimdiff3"]
+	cmd = "gvim -f -d -c 'wincmd J' -c 'resize 10' \"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\""
+	trustExitCode = false
+[mergetool "threesome"]
+	cmd = "mvim -f $BASE $LOCAL $REMOTE $MERGED -c 'ThreesomeInit'"
+	trustExitCode = true

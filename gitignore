@@ -1,0 +1,14 @@
+~$
+xcuserdata
+build
+Icon
+.fseventsd
+.VolumeIcon.icns
+.DS_Store
+*~.nib
+*.xcworkspace
+*.swp
+*.rej
+*.pbxuser
+*.orig
+*.mode1v3
