@@ -1,0 +1,5 @@
+user = {{ keychain['Pianobar'].account }}
+password = {{ keychain['Pianobar'].password }}
+history = 10
+audio_format = aacplus
+event_command = /Users/sorin/.config/pianobar/growl.sh
