@@ -1,7 +1,7 @@
 # ------------------------------------------------------------------------------
 #          FILE:  .screenrc
 #   DESCRIPTION:  Screen configuration file.
-#        AUTHOR:  Sorin Ionescu (sorin.ionescu@gmail.com)
+#        AUTHOR:  Sorin Ionescu <sorin.ionescu@gmail.com>
 #       VERSION:  1.0.1
 # ------------------------------------------------------------------------------
 
@@ -72,8 +72,9 @@ hardstatus alwayslastline "%{=b W}%{k} %= %w %="
 attrcolor b ".I"   # Allow bold colours - necessary for some reason.
 defbce on          # Erase characters with the current background colour.
 
-#termcapinfo xterm* ti@:te@   # Scrolling.
-term screen-bce               # Terminal
+#termcapinfo xterm* ti@:te@                                          # Scrolling.
+termcapinfo xterm-256color "Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm"    # Colours.
+term screen-256color-bce                                             # Terminal.
 
 # ------------------------------------------------------------------------------
 # Windowing Settings
