@@ -4,15 +4,15 @@ These configuration files set up my command line interface.
 
 ## Environment
 
-Be aware that I use Mac OS X; changes will be necessary for Linux users. I primarily use [ZSH](http://www.zsh.org), but [BASH](http://tiswww.case.edu/php/chet/bash/bashtop.html) configuration files are available as well.
+Be aware that I use Mac OS X; changes will be necessary for Linux users.
 
 To switch to ZSH, execute:
 
     chsh -s /bin/zsh
 
-I store [scripts](https://github.com/sorin-ionescu/scripts) in _~/.local/bin_. `PATH` and `MANPATH` must be modified in _zshenv_, *bash_profile*, and _MacOSX/environment.plist_ to match your configuration.
+I store [scripts](https://github.com/sorin-ionescu/scripts) in _~/.local/bin_. `PATH` and `MANPATH` must be modified in _oh-my-zsh/functions/environment.zsh_, and _MacOSX/environment.plist_ to match your configuration.
 
-Some scripts and programs may have different names or extensions depending on the operating system or package manager. Check aliases in _oh-my-zsh/custom/aliases.zsh_ and _bashrc_ to fix them, if necessary.
+Some scripts and programs may have different names or extensions depending on the operating system or package manager. Check aliases in _oh-my-zsh/functions/alias.zsh_ to fix them, if necessary.
 
 ## oh-my-zsh Theme
 
