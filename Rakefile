@@ -1,8 +1,8 @@
 #------------------------------------------------------------------------------
 #          FILE:  Rakefile
 #   DESCRIPTION:  Installs and uninstalls dot files.
-#        AUTHOR:  Sorin Ionescu (sorin.ionescu@gmail.com)
-#       VERSION:  2.0.0
+#        AUTHOR:  Sorin Ionescu <sorin.ionescu@gmail.com>
+#       VERSION:  2.0.1
 #------------------------------------------------------------------------------
 
 require 'date'
@@ -17,7 +17,8 @@ def info(text); STDOUT.puts text; end
 
 RAW_FILE_EXTENSION = 'rrc'
 RAW_FILE_EXTENSION_REGEX = /\.#{RAW_FILE_EXTENSION}$/
-KEYCHAIN_COMMAND = 'security find-generic-password -gl'
+KEYCHAIN_GENERIC_PASSWORD_COMMAND = 'security find-generic-password -gl'
+KEYCHAIN_INTERNET_PASSWORD_COMMAND = 'security find-internet-password -gl'
 KEYCHAIN_REGEX = /\{\{\s+keychain\[['"]([^'"]*)['"]\]\.([^}]*)\s+\}\}/
 ACCOUNT_REGEX = /"acct"<blob>=(?:0x([0-9A-F]+)\s*)?(?:"(.*)")?$/
 PASSWORD_REGEX = /^password: (?:0x([0-9A-F]+)\s*)?(?:"(.*)")?$/
@@ -52,32 +53,42 @@ def render(contents)
   contents.gsub! KEYCHAIN_REGEX do
     label = $1
     field = $2
+    retry_times = 2
+    keychain_command = KEYCHAIN_INTERNET_PASSWORD_COMMAND
     begin
-      stdin, stdout, stderr = Open3.popen3("#{KEYCHAIN_COMMAND} '#{label}'")
+      stdin, stdout, stderr = Open3.popen3("#{keychain_command} '#{label}'")
       output = stdout.readlines.join + stderr.readlines.join
       [stdin, stdout, stderr].each { |stdio| stdio.close }
+      if output =~ /The specified item could not be found in Keychain\./
+        raise NameError
+      end
+      # The field value is stored in hexademical (one) or string (two).
+      field_value = lambda do |one, two|
+        return one.scan(/../).map { |tuple| tuple.hex.chr }.join unless one.nil?
+        return two unless two.nil?
+        return ""
+      end
+      case field
+        when 'account'
+          output[ACCOUNT_REGEX].gsub!(ACCOUNT_REGEX) { field_value[$1, $2] }
+        when 'password'
+          output[PASSWORD_REGEX].gsub!(PASSWORD_REGEX) { field_value[$1, $2] }
+        else
+          raise KeychainError,
+            "Field '#{field}' of Keychain entry '#{label}' does not exist."
+      end
+    rescue NameError
+      keychain_command = KEYCHAIN_GENERIC_PASSWORD_COMMAND
+      retry_times -= 1
+      if retry_times > 0
+        retry
+      else
+        raise KeychainError,
+          "Item '#{label}' could not be found in the Keychain\."
+      end
     rescue IOError
       raise KeychainError,
         "Could not communicate with Keychain for item '#{label}'."
-    end
-    if output =~ /The specified item could not be found in Keychain\./
-      raise KeychainError,
-        "Item '#{label}' could not be found in the Keychain\."
-    end
-    # The field value is stored in hexademical (one) or string (two).
-    field_value = lambda do |one, two|
-      return one.scan(/../).map { |tuple| tuple.hex.chr }.join unless one.nil?
-      return two unless two.nil?
-      return ""
-    end
-    case field
-      when 'account'
-        output[ACCOUNT_REGEX].gsub!(ACCOUNT_REGEX) { field_value[$1, $2] }
-      when 'password'
-        output[PASSWORD_REGEX].gsub!(PASSWORD_REGEX) { field_value[$1, $2] }
-      else
-        raise KeychainError,
-          "Field '#{field}' of Keychain entry '#{label}' does not exist."
     end
   end
   return contents
