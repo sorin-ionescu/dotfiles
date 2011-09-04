@@ -21,8 +21,8 @@
 [pager]
 	status = false
 [github]
-	user = {{ keychain['github.com/api'].account }}
-	token = {{ keychain['github.com/api'].password }}
+	user = <%= Keychain['github.com/api'].account %>
+	token = <%= Keychain['github.com/api'].password %>
 [tig]
 	show-date = relative
 	author-width = 8

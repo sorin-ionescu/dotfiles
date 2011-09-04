@@ -1,8 +1,8 @@
 [retriever]
 type = SimpleIMAPSSLRetriever
 server = imap.gmail.com
-username = {{ keychain['getmail'].account }}
-password = {{ keychain['getmail'].password }}
+username = <%= Keychain['getmail'].account %>
+password = <%= Keychain['getmail'].password %>
 mailboxes = ("[Google Mail]/All Mail",)
 
 [destination]

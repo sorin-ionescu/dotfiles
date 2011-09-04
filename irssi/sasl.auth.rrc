@@ -1,1 +1,0 @@
-freenode	{{ keychain['Irssi: Freenode'].account }}	{{ keychain['Irssi: Freenode'].password }}	DH-BLOWFISH

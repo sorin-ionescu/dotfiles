@@ -2,7 +2,7 @@
 #          FILE:  Rakefile
 #   DESCRIPTION:  Installs and uninstalls dot files.
 #        AUTHOR:  Sorin Ionescu <sorin.ionescu@gmail.com>
-#       VERSION:  2.0.1
+#       VERSION:  2.0.2
 #------------------------------------------------------------------------------
 
 require 'date'
@@ -10,23 +10,33 @@ require 'open3'
 require 'fileutils'
 require 'rubygems'
 require 'rake'
+require 'erb'
 
-class KeychainError < Exception; end
-def error(text); STDERR.puts "Error: #{text}"; end
-def info(text); STDOUT.puts text; end
+# Raised when a Keychain item is not found.
+class KeychainError < Exception
+end
 
-RAW_FILE_EXTENSION = 'rrc'
+# Utility function for displaying messages.
+def info(text)
+  STDOUT.puts text
+end
+
+# Utility function for displaying error messages.
+def error(text)
+  STDERR.puts "Error: #{text}"
+end
+
+RAW_FILE_EXTENSION = 'erb'
 RAW_FILE_EXTENSION_REGEX = /\.#{RAW_FILE_EXTENSION}$/
 KEYCHAIN_GENERIC_PASSWORD_COMMAND = 'security find-generic-password -gl'
 KEYCHAIN_INTERNET_PASSWORD_COMMAND = 'security find-internet-password -gl'
-KEYCHAIN_REGEX = /\{\{\s+keychain\[['"]([^'"]*)['"]\]\.([^}]*)\s+\}\}/
 ACCOUNT_REGEX = /"acct"<blob>=(?:0x([0-9A-F]+)\s*)?(?:"(.*)")?$/
 PASSWORD_REGEX = /^password: (?:0x([0-9A-F]+)\s*)?(?:"(.*)")?$/
 SCRIPT_PATH = File.split(File.expand_path(__FILE__))
 SCRIPT_NAME = SCRIPT_PATH.last
 CONFIG_DIR_PATH = SCRIPT_PATH.first
 BACKUP_DIR_PATH = File.join(ENV['HOME'],
-  ".dotfiles_backup", DateTime.now.strftime("%Y-%m-%d-%H-%M-%S"))
+  '.dotfiles_backup', DateTime.now.strftime('%Y-%m-%d-%H-%M-%S'))
 EXCLUDES = [
   SCRIPT_NAME,
   '_darcs',
@@ -45,14 +55,35 @@ EXCLUDES = [
   /backup\/.*$/
 ]
 
-# Renders a raw dot file.
-#
-# @param [String] contents the raw file data.
-# @return [String] the rendered file data.
-def render(contents)
-  contents.gsub! KEYCHAIN_REGEX do
-    label = $1
-    field = $2
+# Wrapper around the Keychain.
+module Keychain
+  # Holds previously requested Keychain items.
+  @@cache = {}
+
+  # Wrapper around a Keychain item.
+  class Item
+    # Returns the accout name.
+    attr_reader :account
+    # Returns the account password.
+    attr_reader :password
+
+    # Returns a new Keychain item.
+    #
+    # @param [String] account the account name.
+    # @param [String] password the account password.
+    # @return [Item] the Keychain item.
+    def initialize(account, password)
+      @account = account or raise ArgumentError, "Account cannot be nil."
+      @password = password or raise ArgumentError, "Password cannot be nil."
+    end
+  end
+
+  # Returns a Keychain item.
+  #
+  # @param [String] label the Keychain item label.
+  # @return [Item] the Keychain item.
+  def self.[](label)
+    return @@cache[label] if @@cache.has_key? label
     retry_times = 2
     keychain_command = KEYCHAIN_INTERNET_PASSWORD_COMMAND
     begin
@@ -68,15 +99,11 @@ def render(contents)
         return two unless two.nil?
         return ""
       end
-      case field
-        when 'account'
-          output[ACCOUNT_REGEX].gsub!(ACCOUNT_REGEX) { field_value[$1, $2] }
-        when 'password'
-          output[PASSWORD_REGEX].gsub!(PASSWORD_REGEX) { field_value[$1, $2] }
-        else
-          raise KeychainError,
-            "Field '#{field}' of Keychain entry '#{label}' does not exist."
-      end
+      account = \
+        output[ACCOUNT_REGEX].gsub!(ACCOUNT_REGEX) { field_value[$1, $2] }
+      password = \
+        output[PASSWORD_REGEX].gsub!(PASSWORD_REGEX) { field_value[$1, $2] }
+      @@cache[label] = Item.new account, password
     rescue NameError
       keychain_command = KEYCHAIN_GENERIC_PASSWORD_COMMAND
       retry_times -= 1
@@ -84,19 +111,18 @@ def render(contents)
         retry
       else
         raise KeychainError,
-          "Item '#{label}' could not be found in the Keychain\."
+          "Item '#{label}' could not be found in the Keychain."
       end
     rescue IOError
       raise KeychainError,
         "Could not communicate with Keychain for item '#{label}'."
     end
   end
-  return contents
 end
 
 # Moves an existing dot file into the backup directory.
 #
-# @param [String] from the file to backup.
+# @param [String] from the file to back up.
 # @param [String] to the backup destination.
 def backup(from, to)
   return unless File.exists? from
@@ -126,9 +152,11 @@ task :render do
     if File.file? source
       begin
         source_contents = File.read source
-        source_contents = render(source_contents)
+        source_contents = ERB.new(source_contents).result(binding)
       rescue IOError
         error "Could not read raw file '#{source}'."
+      rescue SyntaxError => e
+        error "Could not render raw file '#{source}'.\n\n#{e.message}"
       rescue KeychainError => e
         error e.message
       end

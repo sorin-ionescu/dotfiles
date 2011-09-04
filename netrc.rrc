@@ -1,3 +1,0 @@
-machine github.com
-login {{ keychain['github.com'].account }}
-password {{ keychain['github.com'].password }}
