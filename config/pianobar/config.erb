@@ -2,4 +2,4 @@ user = <%= Keychain['Pianobar'].account %>
 password = <%= Keychain['Pianobar'].password %>
 history = 10
 audio_format = aacplus
-event_command = /Users/sorin/.config/pianobar/growl.sh
+event_command = <%= File.join ENV['HOME'], '.config/pianobar/growl.py' %>
