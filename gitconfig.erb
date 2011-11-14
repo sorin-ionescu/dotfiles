@@ -1,3 +1,10 @@
+[alias]
+	addremove = !git add --all && git ls-files --deleted -z | xargs -0 git rm
+	switch = checkout
+	unadd = reset --mixed
+	uncommit = reset --soft
+	undo = reset --hard
+	unstage = reset
 [user]
 	name = Sorin Ionescu
 	email = sorin.ionescu@gmail.com
