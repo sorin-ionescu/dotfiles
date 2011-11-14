@@ -44,7 +44,6 @@
 	enabled = true
 [diff]
 	tool = vimdiff
-	guitool = gvimdiff
 	mnemonicprefix = true
 	renames = copies
 [difftool]
@@ -64,5 +63,5 @@
 	cmd = "gvim -f -d -c 'wincmd J' -c 'resize 10' \"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\""
 	trustExitCode = false
 [mergetool "threesome"]
-	cmd = "mvim -f $BASE $LOCAL $REMOTE $MERGED -c 'ThreesomeInit'"
+	cmd = "vim -f \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\" -c 'ThreesomeInit'"
 	trustExitCode = true
