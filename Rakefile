@@ -26,7 +26,7 @@ def error(text)
   STDERR.puts "Error: #{text}"
 end
 
-RAW_FILE_EXTENSION = 'erb'
+RAW_FILE_EXTENSION = 'rrc'
 RAW_FILE_EXTENSION_REGEX = /\.#{RAW_FILE_EXTENSION}$/
 KEYCHAIN_GENERIC_PASSWORD_COMMAND = 'security find-generic-password -gl'
 KEYCHAIN_INTERNET_PASSWORD_COMMAND = 'security find-internet-password -gl'
@@ -155,7 +155,7 @@ task :render do
         source_contents = ERB.new(source_contents).result(binding)
       rescue IOError
         error "Could not read raw file '#{source}'."
-      rescue SyntaxError => e
+      rescue NameError, SyntaxError => e
         error "Could not render raw file '#{source}'.\n\n#{e.message}"
       rescue KeychainError => e
         error e.message
