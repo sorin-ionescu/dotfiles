@@ -2,7 +2,7 @@
 "          FILE: .vimrc
 "   DESCRIPTION: Vim configuration file
 "        AUTHOR: Sorin Ionescu <sorin.ionescu@gmail.com>
-"       VERSION: 1.3.0
+"       VERSION: 1.3.1
 " ----------------------------------------------------------------------------
 
 " Version Check ---------------------------------------------------------- {{{
@@ -395,24 +395,9 @@ filetype plugin indent on
 
 " Color Scheme ----------------------------------------------------------- {{{
 
-if $TERM_PROGRAM == 'Apple_Terminal'
-    " Set the background based on the time of day.
-    function! SetBackground()
-        let s:hour = str2nr(strftime('%H'))
-        if  (s:hour >= 0 && s:hour <= 10) || (s:hour >= 18 && s:hour <= 23)
-            set background=dark
-        else
-            set background=light
-        endif
-    endfunction
-    call SetBackground()
-    autocmd CursorHold * call SetBackground()
-else
-    " Set the background automatically. (iTerm)
-    set background&
-endif
-
+" Set the color scheme.
 try
+    set background=dark
     colorscheme solarized
 catch /E185:/
     colorscheme default
