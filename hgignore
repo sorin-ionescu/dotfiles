@@ -1,0 +1,12 @@
+~$
+swp$
+rej$
+orig$
+(^|/)tags$
+.subgit
+.subhg
+
+.DS_Store
+.VolumeIcon.icns
+.fseventsd
+Icon

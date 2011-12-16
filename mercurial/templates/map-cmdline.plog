@@ -1,0 +1,15 @@
+changeset_verbose = '[1mchangeset[0m: [0;32m{rev}[0m:[1;32m{node|short}[0m{branches}{bookmarks}{tags}\n[1mauthor[0m:    [0;36m{author}[0m\n[1mdate[0m:      [0;34m{date|isodatesec} ({date|age})[0m\n\n{desc|strip}\n\n'
+changeset = '[1mchangeset[0m: [0;32m{rev}[0m:[1;32m{node|short}[0m{branches}{bookmarks}{tags}\n[1mauthor[0m:    [0;36m{author}[0m\n[1mdate[0m:      [0;34m{date|isodatesec} ({date|age})[0m\n\n{desc|firstline|strip}\n\n'
+changeset_quiet = '[0;32m{rev}[0m:{node|short}\n\n'
+
+start_branches = ' '
+branch = '[0;35m{branch}[0m'
+
+start_bookmarks = ' '
+bookmark = '[0;33m[{bookmark}][0m '
+last_bookmark = '[0;33m[{bookmark}][0m'
+
+start_tags = ' '
+tag = '[0;31m{tag}[0m, '
+last_tag = '[0;31m{tag}[0m'
+

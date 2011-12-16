@@ -1,0 +1,151 @@
+[alias]
+; Edit the current repository's hgrc file.
+editrc = !$EDITOR `$HG root`/.hg/hgrc
+
+; Pretty logs.
+blog = log --style=/Users/sorin/.mercurial/templates/map-cmdline.blog
+olog = blog -q
+golog = olog --graph
+plog = log --style=/Users/sorin/.mercurial/templates/map-cmdline.plog
+slog = plog --stat
+dlog = slog --patch
+show = dlog --verbose --rev
+
+; Make a new repo with some sensible defaults.
+mkrepo = !$HG init "$1" && cd "$1" && \
+  echo 'syntax: glob'  > .hgignore && \
+  echo ''             >> .hgignore && \
+  echo '.DS_Store'    >> .hgignore && \
+  echo '*.pyc'        >> .hgignore && \
+  echo '*.swp'        >> .hgignore && \
+  echo '*.swo'        >> .hgignore && \
+  echo '*.un~'        >> .hgignore && \
+  echo '.ropeproject' >> .hgignore && \
+  echo 'tags'         >> .hgignore && \
+  echo "[paths]\n" >> .hg/hgrc
+
+; Push only the current branch.
+nudge = push --branch .
+
+[bookmarks]
+track.current = True
+
+[color]
+bookmarks.current = green
+branches.active = yellow
+branches.closed = red
+branches.current = green
+branches.inactive = none
+diff.changed = yellow
+diff.deleted = red
+diff.diffline = bold
+diff.extended = blue
+diff.file_a = red
+diff.file_b = green
+diff.hunk = cyan
+diff.inserted = green
+diff.trailingwhitespace = bold red_background
+qseries.applied = green
+qseries.missing = red
+qseries.unapplied = yellow
+resolve.resolved = green
+resolve.unresolved = red
+status.added = green
+status.clean = none
+status.copied = none
+status.deleted = yellow
+status.ignored = none
+status.modified = cyan
+status.removed = red
+status.unknown = magenta
+tags.normal = green
+tags.local = yellow
+
+[defaults]
+addremove = --similarity 100
+rebase = --keepbranches
+serve = --style=gitweb
+
+[diff]
+git = True
+unified = 5
+
+[email]
+from = Sorin Ionescu <sorin.ionescu@gmail.com>
+method = smtp
+
+[extdiff]
+cmd.ksdiff = ksdiff-wrapper
+opts.ksdiff = hg
+cmd.wdiff = sh
+opts.wdiff = -c 'diff --unified "$@" | wdiff --diff-input --avoid-wraps --start-delete="[38;5;1m" --end-delete="[00m" --start-insert="[38;5;2m" --end-insert="[00m" | sed "s/^\(@@\( [+-][[:digit:]]*,[[:digit:]]*\)\{2\} @@\)$/[38;5;6m\1[00m/g" | less -FSRX' ''
+
+[extensions]
+bisect =
+bookmarks =
+color =
+extdiff =
+fetch =
+graphlog =
+hg_histedit =
+hggit =
+highlight =
+mercurial_keyring =
+mq =
+onsub = ~/.mercurial/extensions/onsub/onsub.py
+pager =
+parentrevspec =
+patchbomb =
+progress =
+prompt = ~/.mercurial/extensions/hg-prompt/prompt.py
+purge =
+rebase =
+record =
+schemes =
+shelve = ~/.mercurial/extensions/hgshelve/hgshelve.py
+
+[hooks]
+; pretxncommit.whitespace = ~/.mercurial/hooks/trailing-whitespace.py
+
+[merge-tools]
+keepthat.args = -c 'cp "$local" "$output.original" && cp "$other" "$output"'
+keepthat.executable = sh
+keepthat.premerge = True
+keepthis.args = -c 'cp "$other" "$output.incoming" && cp "$local" "$output"'
+keepthis.executable = sh
+keepthis.premerge = True
+threesome.args = -f $base $local $other $output -c 'ThreesomeInit'
+threesome.executable = vim
+threesome.premerge = keep
+threesome.priority = 1
+vimdiff.executable = vim
+vimdiff.args = -f -d -c 'wincmd J' -c 'resize 10' "$output" "$local" "$base" "$other"
+
+[pager]
+attend =
+pager = less -FSRX
+quiet = True
+
+[progress]
+delay = 1.0
+format = topic number estimate
+
+[schemes]
+gh = git://github.com/
+ghs = git+ssh://git@github.com/
+
+[smtp]
+host = smtp.gmail.com
+port = 587
+tls = True
+username = sorin.ionescu@gmail.com
+
+[ui]
+commitsubrepos = False
+ignore = ~/.hgignore
+username = Sorin Ionescu <sorin.ionescu@gmail.com>
+
+[web]
+allow_archive = gz zip bz2
+cacerts = ~/.mercurial/cacerts/dummy-cert.pem
+
