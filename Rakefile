@@ -27,11 +27,11 @@ def error(text)
 end
 
 RAW_FILE_EXTENSION = 'rrc'
-RAW_FILE_EXTENSION_REGEX = /\.#{RAW_FILE_EXTENSION}$/
+RAW_FILE_EXTENSION_REGEXP = /\.#{RAW_FILE_EXTENSION}$/
 KEYCHAIN_GENERIC_PASSWORD_COMMAND = 'security find-generic-password -gl'
 KEYCHAIN_INTERNET_PASSWORD_COMMAND = 'security find-internet-password -gl'
-ACCOUNT_REGEX = /"acct"<blob>=(?:0x([0-9A-F]+)\s*)?(?:"(.*)")?$/
-PASSWORD_REGEX = /^password: (?:0x([0-9A-F]+)\s*)?(?:"(.*)")?$/
+ACCOUNT_REGEXP = /"acct"<blob>=(?:0x([0-9A-F]+)\s*)?(?:"(.*)")?$/
+PASSWORD_REGEXP = /^password: (?:0x([0-9A-F]+)\s*)?(?:"(.*)")?$/
 SCRIPT_PATH = File.split(File.expand_path(__FILE__))
 SCRIPT_NAME = SCRIPT_PATH.last
 CONFIG_DIR_PATH = SCRIPT_PATH.first
@@ -100,9 +100,9 @@ module Keychain
         return ""
       end
       account = \
-        output[ACCOUNT_REGEX].gsub!(ACCOUNT_REGEX) { field_value[$1, $2] }
+        output[ACCOUNT_REGEXP].gsub!(ACCOUNT_REGEXP) { field_value[$1, $2] }
       password = \
-        output[PASSWORD_REGEX].gsub!(PASSWORD_REGEX) { field_value[$1, $2] }
+        output[PASSWORD_REGEXP].gsub!(PASSWORD_REGEXP) { field_value[$1, $2] }
       @@cache[label] = Item.new account, password
     rescue NameError
       keychain_command = KEYCHAIN_GENERIC_PASSWORD_COMMAND
@@ -147,7 +147,7 @@ end
 desc 'Render raw dot files.'
 task :render do
   Dir["#{CONFIG_DIR_PATH}/**/*.#{RAW_FILE_EXTENSION}"].each do |source|
-    target = source.gsub(RAW_FILE_EXTENSION_REGEX, '')
+    target = source.gsub(RAW_FILE_EXTENSION_REGEXP, '')
     next if excluded? source
     if File.file? source
       begin
@@ -184,7 +184,7 @@ task :symlink do
     target = File.join(ENV['HOME'], ".#{target_relative}")
     # Do not link if the source is a raw file, the target already exists and
     # is a symlink to the source.
-    next if source =~ RAW_FILE_EXTENSION_REGEX \
+    next if source =~ RAW_FILE_EXTENSION_REGEXP \
       or excluded?(target_relative) \
       or (File.exists?(target) \
         and File.ftype(target) == 'link' \
@@ -338,7 +338,7 @@ task :uninstall do
   Dir["#{CONFIG_DIR_PATH}/*"].each do |source|
     target_relative = source.gsub("#{CONFIG_DIR_PATH}/", '')
     target = File.join(ENV['HOME'], ".#{target_relative}")
-    next if source =~ RAW_FILE_EXTENSION_REGEX or excluded?(target_relative)
+    next if source =~ RAW_FILE_EXTENSION_REGEXP or excluded?(target_relative)
     # Uninstall only if the target exists, is a symlink, and points to source.
     if File.exists?(target) \
       and File.ftype(target) == 'link' \
