@@ -55,7 +55,7 @@ EXCLUDES = [
   /backup\/.*$/
 ]
 
-# Wrapper around the Keychain.
+# Wrapper around Keychain.
 module Keychain
   # Holds previously requested Keychain items.
   @@cache = {}
@@ -73,8 +73,8 @@ module Keychain
     # @param [String] password the account password.
     # @return [Item] the Keychain item.
     def initialize(account, password)
-      @account = account or raise ArgumentError, "Account cannot be nil."
-      @password = password or raise ArgumentError, "Password cannot be nil."
+      @account = account or raise ArgumentError, "Account cannot be nil"
+      @password = password or raise ArgumentError, "Password cannot be nil"
     end
   end
 
@@ -111,11 +111,11 @@ module Keychain
         retry
       else
         raise KeychainError,
-          "Item '#{label}' could not be found in the Keychain."
+          "Item '#{label}' could not be found in Keychain"
       end
     rescue IOError
       raise KeychainError,
-        "Could not communicate with Keychain for item '#{label}'."
+        "Could not communicate with Keychain for item '#{label}'"
     end
   end
 end
@@ -144,7 +144,7 @@ def excluded?(path)
   return excluded
 end
 
-desc 'Render raw dot files.'
+desc 'Render raw dot files'
 task :render do
   Dir["#{CONFIG_DIR_PATH}/**/*.#{RAW_FILE_EXTENSION}"].each do |source|
     target = source.gsub(RAW_FILE_EXTENSION_REGEXP, '')
@@ -154,7 +154,7 @@ task :render do
         source_contents = File.read source
         source_contents = ERB.new(source_contents).result(binding)
       rescue IOError
-        error "Could not read raw file '#{source}'."
+        error "Could not read raw file '#{source}'"
       rescue NameError, SyntaxError => e
         error "Could not render raw file '#{source}'.\n\n#{e.message}"
       rescue KeychainError => e
@@ -170,13 +170,13 @@ task :render do
           end
         end
       rescue IOError
-        error "Could not write file '#{target}'."
+        error "Could not write file '#{target}'"
       end
     end
   end
 end
 
-desc 'Symlink dot files.'
+desc 'Symlink dot files'
 task :symlink do
   Dir["#{CONFIG_DIR_PATH}/*"].each do |source|
     target_relative = source.gsub("#{CONFIG_DIR_PATH}/", '')
@@ -193,18 +193,18 @@ task :symlink do
     begin
       backup(target, target_backup)
     rescue IOError
-      error "Could not backup '#{target}', will skip symlinking '#{source}'."
+      error "Could not backup '#{target}', will skip symlinking '#{source}'"
       next
     end
     begin
       File.symlink(source, target)
     rescue IOError
-      error "Could not symlink '#{source}' to '#{target}'."
+      error "Could not symlink '#{source}' to '#{target}'"
     end
   end
 end
 
-desc 'Unlink broken symlinks.'
+desc 'Unlink broken symlinks'
 task :clean do
   Dir["#{ENV['HOME']}/.*"].each do |item|
     if File.ftype(item) == 'link'
@@ -213,14 +213,14 @@ task :clean do
         begin
           File.unlink(item)
         rescue IOError
-          error "Could not unlink '#{item}'."
+          error "Could not unlink '#{item}'"
         end
       end
     end
   end
 end
 
-desc 'Initialize submodules.'
+desc 'Initialize submodules'
 task :init do
   if File.exists? '.gitmodules'
     # Popen3 does not return the exit status code.
@@ -239,10 +239,10 @@ task :init do
         Thread.current.abort_on_exception = true
         while line = stderr.gets
           if line =~ /Unable to checkout '[^']+' in submodule path '([^']+)'/
-            error "Could not initialize submodule '#{$1}'."
+            error "Could not initialize submodule '#{$1}'"
           end
           if stderr.eof? and line.to_i != 0
-            error "Could not initialize submodules."
+            error "Could not initialize submodules"
           end
         end
       end
@@ -256,7 +256,7 @@ task :init do
   end
 end
 
-desc 'Update submodules.'
+desc 'Update submodules'
 task :update do
   if File.exists? '.gitmodules'
     # Popen3 does not return the exit status code.
@@ -274,10 +274,10 @@ task :update do
       thread_stderr = Thread.new do
         while line = stderr.gets
           if line =~ /Stopping at '([^']+)'/
-            error "Could not update submodule '#{$1}'."
+            error "Could not update submodule '#{$1}'"
           end
           if stderr.eof? and line.to_i != 0
-            error "Could not update submodules."
+            error "Could not update submodules"
           end
         end
       end
@@ -292,7 +292,7 @@ task :update do
   end
 end
 
-desc 'Make submodules.'
+desc 'Make submodules'
 task :make do
   Dir["#{CONFIG_DIR_PATH}/**/Rakefile"].each do |rake_file|
     next if SCRIPT_PATH.join('/') == rake_file
@@ -323,7 +323,7 @@ task :make do
       write.close
       read.each do |line|
         if read.eof? and line =~ /error:/i
-          error "Could not make '#{submodule_relative}'."
+          error "Could not make '#{submodule_relative}'"
         end
       end
     rescue IOError => e
@@ -333,7 +333,7 @@ task :make do
   end
 end
 
-desc 'Uninstall dot files.'
+desc 'Uninstall dot files'
 task :uninstall do
   Dir["#{CONFIG_DIR_PATH}/*"].each do |source|
     target_relative = source.gsub("#{CONFIG_DIR_PATH}/", '')
@@ -347,7 +347,7 @@ task :uninstall do
       begin
         File.unlink(target)
       rescue IOError
-        error "Could not unlink '#{target}'."
+        error "Could not unlink '#{target}'"
       end
     end
   end
