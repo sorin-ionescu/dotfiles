@@ -2,7 +2,7 @@
 #          FILE:  Rakefile
 #   DESCRIPTION:  Installs and uninstalls dot files.
 #        AUTHOR:  Sorin Ionescu <sorin.ionescu@gmail.com>
-#       VERSION:  2.0.2
+#       VERSION:  2.1.0
 #------------------------------------------------------------------------------
 
 require 'date'
@@ -35,8 +35,10 @@ PASSWORD_REGEXP = /^password: (?:0x([0-9A-F]+)\s*)?(?:"(.*)")?$/
 SCRIPT_PATH = File.split(File.expand_path(__FILE__))
 SCRIPT_NAME = SCRIPT_PATH.last
 CONFIG_DIR_PATH = SCRIPT_PATH.first
-BACKUP_DIR_PATH = File.join(ENV['HOME'],
-  '.dotfiles_backup', DateTime.now.strftime('%Y-%m-%d-%H-%M-%S'))
+BACKUP_DIR_PATH = File.join(
+  ENV['HOME'],
+  '.dotfiles_backup',
+  DateTime.now.strftime('%Y-%m-%d-%H-%M-%S'))
 EXCLUDES = [
   SCRIPT_NAME,
   '_darcs',
@@ -54,6 +56,9 @@ EXCLUDES = [
   'terminal',
   /backup\/.*$/
 ]
+BUNDLE_DIR_PATH = File.join(CONFIG_DIR_PATH, 'vim/bundle')
+VUNDLE_DIR_PATH = File.join(BUNDLE_DIR_PATH, 'vundle')
+VUNDLE_REMOTE_URL = 'https://github.com/gmarik/vundle.git'
 
 # Wrapper around Keychain.
 module Keychain
@@ -103,7 +108,7 @@ module Keychain
         output[ACCOUNT_REGEXP].gsub!(ACCOUNT_REGEXP) { field_value[$1, $2] }
       password = \
         output[PASSWORD_REGEXP].gsub!(PASSWORD_REGEXP) { field_value[$1, $2] }
-      @@cache[label] = Item.new account, password
+      @@cache[label] = Item.new(account, password)
     rescue NameError
       keychain_command = KEYCHAIN_GENERIC_PASSWORD_COMMAND
       retry_times -= 1
@@ -142,6 +147,24 @@ def excluded?(path)
     excluded = true if path =~ pattern
   end
   return excluded
+end
+
+# Returns the absolute path to a Vim bundle.
+#
+# @param [String] line the line to be parsed.
+# @return [String] the absolute path to a bundle.
+def bundle_path(line)
+  # Strip ANSI escape sequences (may output junk whitespace).
+  line.gsub!(/\e\[?.*?[\@-~]/, '')
+  if line =~ /> Bundle '([^']+)'/
+    # Get the bundle URL.
+    bundle_url = $1
+    # Strip junk whitespace.
+    bundle_url.gsub!(/\s+/, '')
+    # Strip .git extension from full URLs.
+    bundle_url.gsub!(/\.git$/, '')
+    return File.join(BUNDLE_DIR_PATH, File.split(bundle_url).last)
+  end
 end
 
 desc 'Render raw dot files'
@@ -211,7 +234,7 @@ task :clean do
       unless File.exists? item
         info "Unlinking: #{item}"
         begin
-          File.unlink(item)
+          File.unlink item
         rescue IOError
           error "Could not unlink '#{item}'"
         end
@@ -292,6 +315,114 @@ task :update do
   end
 end
 
+desc 'Initialize Vim bundles'
+task :'init-bundle' do
+  next unless File.exists?('vimrc') and File.directory?('vim')
+  next if File.directory?(File.join(VUNDLE_DIR_PATH, '.git'))
+  info "Initializing: #{VUNDLE_DIR_PATH}".gsub("#{CONFIG_DIR_PATH}/", '')
+  Open3.popen3(
+    "git clone '#{VUNDLE_REMOTE_URL}' '#{VUNDLE_DIR_PATH}'; echo $? 1>&2"
+  ) do |stdin, stdout, stderr|
+    thread_stderr = Thread.new do
+      Thread.current.abort_on_exception = true
+      while line = stderr.gets
+        if stderr.eof? and line.to_i != 0
+          error "Could not initialize Vim bundles"
+        end
+      end
+    end
+    begin
+      thread_stderr.join
+    rescue Exception => e
+      error e.message if e.class == IOError
+    end
+  end
+end
+
+desc 'Update Vim bundles'
+task :'update-bundle' => [:'init-bundle'] do
+  next unless File.directory?(File.join(VUNDLE_DIR_PATH, '.git'))
+  Open3.popen3(
+    "vim -c 'silent!" +
+      "redir >> /dev/stdout " +
+        "| execute \"BundleInstall!\" " +
+        "| only " +
+        "| quitall!';" +
+    "echo $? 1>&2"
+  ) do |stdin, stdout, stderr|
+    thread_stdout = Thread.new do
+      Thread.current.abort_on_exception = true
+      # Vim will not run without reading stdout,
+      # might as well parse its output.
+      while line = stdout.gets
+        bundle = bundle_path(line)
+        next unless bundle
+        bundle_relative = bundle.gsub("#{CONFIG_DIR_PATH}/", '')
+        info "Updating: #{bundle_relative}"
+        if line =~ /Error processing '([^']+)'/
+          error "Could not update bundle '#{bundle_relative}'"
+        end
+      end
+    end
+    thread_stderr = Thread.new do
+      Thread.current.abort_on_exception = true
+      while line = stderr.gets
+        if stderr.eof? and line.to_i != 0
+          error "Could not update bundles"
+        end
+      end
+    end
+    begin
+      thread_stdout.join
+      thread_stderr.join
+    rescue Exception => e
+      error e.message if e.class == IOError
+    end
+  end
+end
+
+desc 'Clean Vim bundles'
+task :'clean-bundle' do
+  next unless File.exists?('vimrc') and File.directory?('vim')
+  Open3.popen3(
+    "vim -c 'silent!" +
+      "redir >> /dev/stdout " +
+        "| execute \"BundleClean!\" "+
+        "| only " +
+        "| quitall!'; " +
+    "echo $? 1>&2"
+  ) do |stdin, stdout, stderr|
+    thread_stdout = Thread.new do
+      Thread.current.abort_on_exception = true
+      # Vim will not run without reading stdout,
+      # might as well parse its output.
+      while line = stdout.gets
+        bundle = bundle_path(line)
+        next unless bundle
+        bundle_relative = bundle.gsub("#{CONFIG_DIR_PATH}/", '')
+        info "Removing: #{bundle_relative}"
+        if line =~ /Error processing '([^']+)'/
+          error "Could not remove bundle '#{bundle_relative}'"
+        end
+      end
+    end
+    thread_stderr = Thread.new do
+      Thread.current.abort_on_exception = true
+      while line = stderr.gets
+        if stderr.eof? and line.to_i != 0
+          error "Could not clean bundles"
+        end
+      end
+    end
+    begin
+      thread_stdout.join
+      thread_stderr.join
+    rescue Exception => e
+      error e.message if e.class == IOError
+    end
+  end
+end
+
 desc 'Make submodules'
 task :make do
   Dir["#{CONFIG_DIR_PATH}/**/Rakefile"].each do |rake_file|
@@ -329,12 +460,12 @@ task :make do
     rescue IOError => e
       error e.message
     end
-    Process.waitpid(pid)
+    Process.waitpid pid
   end
 end
 
 desc 'Uninstall dot files'
-task :uninstall do
+task :uninstall => [:clean] do
   Dir["#{CONFIG_DIR_PATH}/*"].each do |source|
     target_relative = source.gsub("#{CONFIG_DIR_PATH}/", '')
     target = File.join(ENV['HOME'], ".#{target_relative}")
@@ -345,7 +476,7 @@ task :uninstall do
       and File.identical?(source, target)
       info "Unlinking: #{target}"
       begin
-        File.unlink(target)
+        File.unlink target
       rescue IOError
         error "Could not unlink '#{target}'"
       end
@@ -353,9 +484,18 @@ task :uninstall do
   end
 end
 
-desc 'Install dot files.'
-task :install => [:init, :make, :clean, :render, :symlink] do
-  info "Backup: #{BACKUP_DIR_PATH}" if File.exists? BACKUP_DIR_PATH
+desc 'Install dot files'
+task :install => [
+  :init,
+  :make,
+  :clean,
+  :render,
+  :symlink,
+  :'init-bundle',
+  :'update-bundle',
+  :'clean-bundle'
+] do
+  info "Backup: #{BACKUP_DIR_PATH}" if File.directory? BACKUP_DIR_PATH
 end
 
 task :default => [:install]
