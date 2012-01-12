@@ -2,7 +2,7 @@
 #          FILE:  Rakefile
 #   DESCRIPTION:  Installs and uninstalls dot files.
 #        AUTHOR:  Sorin Ionescu <sorin.ionescu@gmail.com>
-#       VERSION:  2.1.0
+#       VERSION:  2.1.1
 #------------------------------------------------------------------------------
 
 require 'date'
@@ -24,6 +24,12 @@ end
 # Utility function for displaying error messages.
 def error(text)
   STDERR.puts "Error: #{text}"
+end
+
+# This Rakefile is written for Mac OS X system Ruby.
+if RUBY_VERSION >= '1.9'
+  error "Ruby 1.8.7 is required to run this Rakefile"
+  exit 1
 end
 
 RAW_FILE_EXTENSION = 'rrc'
