@@ -253,14 +253,14 @@ task :init do
     ) do |stdin, stdout, stderr|
       thread_stdout = Thread.new do
         Thread.current.abort_on_exception = true
-        while line = stdout.gets
+        stdout.each do |line|
           next if line !~ /^Cloning into .*\.{3}$/
           info line.gsub(/^Cloning into (.*)\.{3}$/, "Initializing: \\1")
         end
       end
       thread_stderr = Thread.new do
         Thread.current.abort_on_exception = true
-        while line = stderr.gets
+        stderr.each do |line|
           if line =~ /Unable to checkout '[^']+' in submodule path '([^']+)'/
             error "Could not initialize submodule '#{$1}'"
           end
@@ -288,14 +288,14 @@ task :update do
       "git submodule foreach git pull origin master; echo $? 1>&2"
     ) do |stdin, stdout, stderr|
       thread_stdout = Thread.new do
-        while line = stdout.gets
+        stdout.each do |line|
           if line =~ /Entering '([^']+)'/
             info "Updating: #{$1}"
           end
         end
       end
       thread_stderr = Thread.new do
-        while line = stderr.gets
+        stderr.each do |line|
           if line =~ /Stopping at '([^']+)'/
             error "Could not update submodule '#{$1}'"
           end
@@ -325,7 +325,7 @@ task :'init-bundle' do
   ) do |stdin, stdout, stderr|
     thread_stderr = Thread.new do
       Thread.current.abort_on_exception = true
-      while line = stderr.gets
+      stderr.each do |line|
         if stderr.eof? and line.to_i != 0
           error "Could not initialize Vim bundles"
         end
@@ -354,7 +354,7 @@ task :'update-bundle' => [:'init-bundle'] do
       Thread.current.abort_on_exception = true
       # Vim will not run without reading stdout,
       # might as well parse its output.
-      while line = stdout.gets
+      stdout.each do |line|
         bundle = bundle_path(line)
         next unless bundle
         bundle_relative = bundle.gsub("#{CONFIG_DIR_PATH}/", '')
@@ -366,7 +366,7 @@ task :'update-bundle' => [:'init-bundle'] do
     end
     thread_stderr = Thread.new do
       Thread.current.abort_on_exception = true
-      while line = stderr.gets
+      stderr.each do |line|
         if stderr.eof? and line.to_i != 0
           error "Could not update bundles"
         end
@@ -396,7 +396,7 @@ task :'clean-bundle' do
       Thread.current.abort_on_exception = true
       # Vim will not run without reading stdout,
       # might as well parse its output.
-      while line = stdout.gets
+      stdout.each do |line|
         bundle = bundle_path(line)
         next unless bundle
         bundle_relative = bundle.gsub("#{CONFIG_DIR_PATH}/", '')
@@ -408,7 +408,7 @@ task :'clean-bundle' do
     end
     thread_stderr = Thread.new do
       Thread.current.abort_on_exception = true
-      while line = stderr.gets
+      stderr.each do |line|
         if stderr.eof? and line.to_i != 0
           error "Could not clean bundles"
         end
