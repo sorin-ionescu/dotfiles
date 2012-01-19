@@ -2,7 +2,7 @@
 #          FILE:  Rakefile
 #   DESCRIPTION:  Installs and uninstalls dot files.
 #        AUTHOR:  Sorin Ionescu <sorin.ionescu@gmail.com>
-#       VERSION:  2.1.1
+#       VERSION:  2.1.2
 #------------------------------------------------------------------------------
 
 require 'date'
@@ -257,14 +257,16 @@ task :init do
     Open3.popen3(
       "git submodule update --init --recursive; echo $? 1>&2"
     ) do |stdin, stdout, stderr|
-      thread_stdout = Thread.new do
+      stdios = [stdin, stdout, stderr]
+      threads = []
+      threads << Thread.new do
         Thread.current.abort_on_exception = true
         stdout.each do |line|
           next if line !~ /^Cloning into .*\.{3}$/
           info line.gsub(/^Cloning into (.*)\.{3}$/, "Initializing: \\1")
         end
       end
-      thread_stderr = Thread.new do
+      threads << Thread.new do
         Thread.current.abort_on_exception = true
         stderr.each do |line|
           if line =~ /Unable to checkout '[^']+' in submodule path '([^']+)'/
@@ -276,8 +278,8 @@ task :init do
         end
       end
       begin
-        thread_stdout.join
-        thread_stderr.join
+        threads.each(&:join)
+        stdios.each(&:close)
       rescue Exception => e
         error e.message if e.class == IOError
       end
@@ -293,14 +295,16 @@ task :update do
     Open3.popen3(
       "git submodule foreach git pull origin master; echo $? 1>&2"
     ) do |stdin, stdout, stderr|
-      thread_stdout = Thread.new do
+      stdios = [stdin, stdout, stderr]
+      threads = []
+      thread << Thread.new do
         stdout.each do |line|
           if line =~ /Entering '([^']+)'/
             info "Updating: #{$1}"
           end
         end
       end
-      thread_stderr = Thread.new do
+      threads << Thread.new do
         stderr.each do |line|
           if line =~ /Stopping at '([^']+)'/
             error "Could not update submodule '#{$1}'"
@@ -311,8 +315,8 @@ task :update do
         end
       end
       begin
-        thread_stdout.join
-        thread_stderr.join
+        threads.each(&:join)
+        stdios.each(&:close)
         Rake::Task[:make].invoke
       rescue Exception => e
         error e.message if e.class == IOError
@@ -329,16 +333,23 @@ task :'init-bundle' do
   Open3.popen3(
     "git clone '#{VUNDLE_REMOTE_URL}' '#{VUNDLE_DIR_PATH}'; echo $? 1>&2"
   ) do |stdin, stdout, stderr|
-    thread_stderr = Thread.new do
+    vundle = File.basename VUNDLE_DIR_PATH
+    stdios = [stdin, stdout, stderr]
+    threads = []
+    threads << Thread.new do
       Thread.current.abort_on_exception = true
       stderr.each do |line|
+        if line =~ /^fatal: (.*)$/
+          error "Could not initialize Vim bundle '#{vundle}'"
+        end
         if stderr.eof? and line.to_i != 0
           error "Could not initialize Vim bundles"
         end
       end
     end
     begin
-      thread_stderr.join
+      threads.each(&:join)
+      stdios.each(&:close)
     rescue Exception => e
       error e.message if e.class == IOError
     end
@@ -356,7 +367,9 @@ task :'update-bundle' => [:'init-bundle'] do
         "| quitall!';" +
     "echo $? 1>&2"
   ) do |stdin, stdout, stderr|
-    thread_stdout = Thread.new do
+    stdios = [stdin, stdout, stderr]
+    threads = []
+    threads << Thread.new do
       Thread.current.abort_on_exception = true
       # Vim will not run without reading stdout,
       # might as well parse its output.
@@ -366,21 +379,21 @@ task :'update-bundle' => [:'init-bundle'] do
         bundle_relative = bundle.gsub("#{CONFIG_DIR_PATH}/", '')
         info "Updating: #{bundle_relative}"
         if line =~ /Error processing '([^']+)'/
-          error "Could not update bundle '#{bundle_relative}'"
+          error "Could not update Vim bundle '#{bundle_relative}'"
         end
       end
     end
-    thread_stderr = Thread.new do
+    threads << Thread.new do
       Thread.current.abort_on_exception = true
       stderr.each do |line|
         if stderr.eof? and line.to_i != 0
-          error "Could not update bundles"
+          error "Could not update Vim bundles"
         end
       end
     end
     begin
-      thread_stdout.join
-      thread_stderr.join
+      threads.each(&:join)
+      stdios.each(&:close)
     rescue Exception => e
       error e.message if e.class == IOError
     end
@@ -398,7 +411,9 @@ task :'clean-bundle' do
         "| quitall!'; " +
     "echo $? 1>&2"
   ) do |stdin, stdout, stderr|
-    thread_stdout = Thread.new do
+    stdios = [stdin, stdout, stderr]
+    threads = []
+    threads << Thread.new do
       Thread.current.abort_on_exception = true
       # Vim will not run without reading stdout,
       # might as well parse its output.
@@ -408,21 +423,21 @@ task :'clean-bundle' do
         bundle_relative = bundle.gsub("#{CONFIG_DIR_PATH}/", '')
         info "Removing: #{bundle_relative}"
         if line =~ /Error processing '([^']+)'/
-          error "Could not remove bundle '#{bundle_relative}'"
+          error "Could not remove Vim bundle '#{bundle_relative}'"
         end
       end
     end
-    thread_stderr = Thread.new do
+    threads << Thread.new do
       Thread.current.abort_on_exception = true
       stderr.each do |line|
         if stderr.eof? and line.to_i != 0
-          error "Could not clean bundles"
+          error "Could not clean Vim bundles"
         end
       end
     end
     begin
-      thread_stdout.join
-      thread_stderr.join
+      threads.each(&:join)
+      stdios.each(&:close)
     rescue Exception => e
       error e.message if e.class == IOError
     end
