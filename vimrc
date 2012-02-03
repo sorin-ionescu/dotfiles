@@ -2,7 +2,7 @@
 "          FILE: .vimrc
 "   DESCRIPTION: Vim configuration file
 "        AUTHOR: Sorin Ionescu <sorin.ionescu@gmail.com>
-"       VERSION: 1.3.1
+"       VERSION: 1.3.2
 " ----------------------------------------------------------------------------
 
 " Version Check ---------------------------------------------------------- {{{
@@ -397,7 +397,13 @@ filetype plugin indent on
 
 " Set the color scheme.
 try
-    set background=dark
+    if match($ITERM_PROFILE, 'Dark') != -1
+        set background=dark
+    elseif match($ITERM_PROFILE, 'Light') != -1
+        set background=light
+    else
+        set background=dark
+    endif
     colorscheme solarized
 catch /E185:/
     colorscheme default
