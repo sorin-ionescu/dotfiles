@@ -2,7 +2,7 @@
 "          FILE: .vimrc
 "   DESCRIPTION: Vim configuration file
 "        AUTHOR: Sorin Ionescu <sorin.ionescu@gmail.com>
-"       VERSION: 1.3.2
+"       VERSION: 1.3.3
 " ----------------------------------------------------------------------------
 
 " Version Check ---------------------------------------------------------- {{{
@@ -1043,15 +1043,18 @@ let ropevim_global_prefix = '<C-c>p'
 " }}}
 " Solarized -------------------------------------------------------------- {{{
 
-if colors_name == 'solarized'
+if exists('g:colors_name') && g:colors_name == 'solarized'
+    " Text is unreadable with background transparency.
     if has('gui_macvim')
         set transparency=0
     endif
 
+    " Highlighted text is unreadable in Terminal.app because it
+    " does not support setting of the cursor foreground color.
     if !has('gui_running') && $TERM_PROGRAM == 'Apple_Terminal'
-        let g:solarized_termcolors = &t_Co
-        let g:solarized_termtrans = 1
-        colorscheme solarized
+        if &background == 'dark'
+            hi Visual term=reverse cterm=reverse ctermfg=10 ctermbg=7
+        endif
     endif
 
     call togglebg#map("<F2>")
