@@ -2,7 +2,7 @@
 "          FILE: .vimrc
 "   DESCRIPTION: Vim configuration file
 "        AUTHOR: Sorin Ionescu <sorin.ionescu@gmail.com>
-"       VERSION: 1.3.3
+"       VERSION: 1.3.4
 " ----------------------------------------------------------------------------
 
 " Version Check ---------------------------------------------------------- {{{
@@ -1056,8 +1056,6 @@ if exists('g:colors_name') && g:colors_name == 'solarized'
             hi Visual term=reverse cterm=reverse ctermfg=10 ctermbg=7
         endif
     endif
-
-    call togglebg#map("<F2>")
 endif
 
 " }}}
@@ -1473,6 +1471,20 @@ function! StripTrailingWhitespace()
         call winrestview(l:winview)
     endif
 endfunction
+
+" }}}
+" Toggle Background ------------------------------------------------------ {{{
+
+function! ToggleBackground()
+    let &background = ( &background == "dark"? "light" : "dark" )
+    if exists("g:colors_name")
+        exe "colorscheme " . g:colors_name
+    endif
+endfunction
+command! ToggleBackground :call ToggleBackground()
+silent! nnoremap <F2> :ToggleBackground<CR>
+silent! inoremap <F2> :ToggleBackground<CR>
+silent! vnoremap <F2> :ToggleBackground<CR>
 
 " }}}
 
