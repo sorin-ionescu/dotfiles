@@ -1,0 +1,36 @@
+# ------------------------------------------------------------------------------
+#          FILE:  .aprc
+#   DESCRIPTION:  Awesome Print configuration file
+#        AUTHOR:  Sorin Ionescu <sorin.ionescu@gmail.com>
+#       VERSION:  1.0.0
+# ------------------------------------------------------------------------------
+
+
+# ------------------------------------------------------------------------------
+# Default Options
+# ------------------------------------------------------------------------------
+AwesomePrint.defaults = {
+  :indent => 2,
+  :sort_keys => true,
+  :color => {
+    :args => :greenish,
+    :array => :pale,
+    :bigdecimal => :blue,
+    :class => :yellow,
+    :date => :greenish,
+    :falseclass => :red,
+    :fixnum => :blue,
+    :float => :blue,
+    :hash => :pale,
+    :keyword => :cyan,
+    :method => :purpleish,
+    :nilclass => :red,
+    :string => :yellowish,
+    :struct => :pale,
+    :symbol => :cyanish,
+    :time => :greenish,
+    :trueclass => :green,
+    :variable => :cyanish
+  }
+}
+
