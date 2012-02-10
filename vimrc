@@ -2,7 +2,7 @@
 "          FILE: .vimrc
 "   DESCRIPTION: Vim configuration file
 "        AUTHOR: Sorin Ionescu <sorin.ionescu@gmail.com>
-"       VERSION: 1.3.6
+"       VERSION: 1.3.7
 " ----------------------------------------------------------------------------
 
 " Version Check ---------------------------------------------------------- {{{
@@ -1128,24 +1128,6 @@ let g:threesome_wrap = "nowrap"
 " }}}
 " Key Remapping ---------------------------------------------------------- {{{
 
-" Error Navigation (Credit: Steve Losh) ---------------------------------- {{{
-
-"
-"             Location List     QuickFix Window
-"            (e.g. Syntastic)     (e.g. Ack)
-"            ----------------------------------
-" Next      |     M-j               M-S-j     |
-" Previous  |     M-k               M-S-k     |
-"            ----------------------------------
-"
-"
-
-nnoremap ∆ :lnext<CR>zvzz
-nnoremap ˚ :lprevious<CR>zvzz
-nnoremap Ô :cnext<CR>zvzz
-nnoremap  :cprevious<CR>zvzz
-
-" }}}
 " Tab Navigation --------------------------------------------------------- {{{
 
 " Easily create a new tab.
