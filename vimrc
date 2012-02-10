@@ -2,7 +2,7 @@
 "          FILE: .vimrc
 "   DESCRIPTION: Vim configuration file
 "        AUTHOR: Sorin Ionescu <sorin.ionescu@gmail.com>
-"       VERSION: 1.3.4
+"       VERSION: 1.3.5
 " ----------------------------------------------------------------------------
 
 " Version Check ---------------------------------------------------------- {{{
@@ -258,13 +258,16 @@ set backspace=indent,eol,start
 set backup
 
 " Store backup files in one place.
-set backupdir^=$HOME/.backup/
+set backupdir^=$HOME/.vim/backup//
 
 " Store swap files in one place.
-set directory^=$HOME/.backup/swap
+set dir^=$HOME/.vim/swap//
 
 " Store undo files in one place.
-set undodir^=$HOME/.backup/undo
+set undodir^=$HOME/.vim/undo//
+
+" Store view files in one place.
+set viewdir^=$HOME/.vim/view//
 
 " Save undo tree.
 set undofile
