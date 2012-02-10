@@ -2,7 +2,7 @@
 "          FILE: .vimrc
 "   DESCRIPTION: Vim configuration file
 "        AUTHOR: Sorin Ionescu <sorin.ionescu@gmail.com>
-"       VERSION: 1.3.5
+"       VERSION: 1.3.6
 " ----------------------------------------------------------------------------
 
 " Version Check ---------------------------------------------------------- {{{
@@ -744,8 +744,8 @@ set wildignore+=*.pyc
 " Compiled spelling lists.
 set wildignore+=*.spl
 
-" Vim swap files.
-set wildignore+=*.sw?
+" Backup, auto save, swap, and view files.
+set wildignore+=*~,#*#,*.sw?,*=
 
 " Mac OS X.
 set wildignore+=*.DS_Store
