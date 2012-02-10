@@ -2,7 +2,7 @@
 #          FILE:  Rakefile
 #   DESCRIPTION:  Installs and uninstalls dot files.
 #        AUTHOR:  Sorin Ionescu <sorin.ionescu@gmail.com>
-#       VERSION:  2.1.2
+#       VERSION:  2.1.3
 #------------------------------------------------------------------------------
 
 require 'date'
@@ -173,6 +173,251 @@ def bundle_path(line)
   end
 end
 
+namespace :link do
+  desc 'Symlink dot files'
+  task :create do
+    Dir["#{CONFIG_DIR_PATH}/*"].each do |source|
+      target_relative = source.gsub("#{CONFIG_DIR_PATH}/", '')
+      target_backup = File.join(BACKUP_DIR_PATH, target_relative)
+      target = File.join(ENV['HOME'], ".#{target_relative}")
+      # Do not link if the source is a raw file, the target already exists and
+      # is a symlink to the source.
+      next if source =~ RAW_FILE_EXTENSION_REGEXP \
+        or excluded?(target_relative) \
+        or (File.exists?(target) \
+          and File.ftype(target) == 'link' \
+          and File.identical?(source, target))
+      info "Linking: #{target}"
+      begin
+        backup(target, target_backup)
+      rescue IOError
+        error "Could not backup '#{target}', will skip symlinking '#{source}'"
+        next
+      end
+      begin
+        File.symlink(source, target)
+      rescue IOError
+        error "Could not symlink '#{source}' to '#{target}'"
+      end
+    end
+  end
+
+  desc 'Unlink broken symlinks'
+  task :clean do
+    Dir["#{ENV['HOME']}/.*"].each do |item|
+      if File.ftype(item) == 'link'
+        unless File.exists? item
+          info "Unlinking: #{item}"
+          begin
+            File.unlink item
+          rescue IOError
+            error "Could not unlink '#{item}'"
+          end
+        end
+      end
+    end
+  end
+end
+
+namespace :module do
+  desc 'Initialize submodules'
+  task :init do
+    if File.exists? '.gitmodules'
+      # Popen3 does not return the exit status code.
+      # Echo it onto the last line of stderr.
+      Open3.popen3(
+        "git submodule update --init --recursive; echo $? 1>&2"
+      ) do |stdin, stdout, stderr|
+        stdios = [stdin, stdout, stderr]
+        threads = []
+        threads << Thread.new do
+          Thread.current.abort_on_exception = true
+          stdout.each do |line|
+            next if line !~ /^Cloning into .*\.{3}$/
+            info line.gsub(/^Cloning into (.*)\.{3}$/, "Initializing: \\1")
+          end
+        end
+        threads << Thread.new do
+          Thread.current.abort_on_exception = true
+          stderr.each do |line|
+            if line =~ /Unable to checkout '[^']+' in submodule path '([^']+)'/
+              error "Could not initialize submodule '#{$1}'"
+            end
+            if stderr.eof? and line.to_i != 0
+              error "Could not initialize submodules"
+            end
+          end
+        end
+        begin
+          threads.each(&:join)
+          stdios.each(&:close)
+        rescue Exception => e
+          error e.message if e.class == IOError
+        end
+      end
+    end
+  end
+
+  desc 'Update submodules'
+  task :update do
+    if File.exists? '.gitmodules'
+      # Popen3 does not return the exit status code.
+      # Echo it onto the last line of stderr.
+      Open3.popen3(
+        "git submodule foreach git pull origin master; echo $? 1>&2"
+      ) do |stdin, stdout, stderr|
+        stdios = [stdin, stdout, stderr]
+        threads = []
+        thread << Thread.new do
+          stdout.each do |line|
+            if line =~ /Entering '([^']+)'/
+              info "Updating: #{$1}"
+            end
+          end
+        end
+        threads << Thread.new do
+          stderr.each do |line|
+            if line =~ /Stopping at '([^']+)'/
+              error "Could not update submodule '#{$1}'"
+            end
+            if stderr.eof? and line.to_i != 0
+              error "Could not update submodules"
+            end
+          end
+        end
+        begin
+          threads.each(&:join)
+          stdios.each(&:close)
+          Rake::Task[:make].invoke
+        rescue Exception => e
+          error e.message if e.class == IOError
+        end
+      end
+    end
+  end
+end
+
+namespace :bundle do
+  desc 'Initialize Vim bundles'
+  task :init do
+    next unless File.exists?('vimrc') and File.directory?('vim')
+    next if File.directory?(File.join(VUNDLE_DIR_PATH, '.git'))
+    info "Initializing: #{VUNDLE_DIR_PATH}".gsub("#{CONFIG_DIR_PATH}/", '')
+    Open3.popen3(
+      "git clone '#{VUNDLE_REMOTE_URL}' '#{VUNDLE_DIR_PATH}'; echo $? 1>&2"
+    ) do |stdin, stdout, stderr|
+      vundle = File.basename VUNDLE_DIR_PATH
+      stdios = [stdin, stdout, stderr]
+      threads = []
+      threads << Thread.new do
+        Thread.current.abort_on_exception = true
+        stderr.each do |line|
+          if line =~ /^fatal: (.*)$/
+            error "Could not initialize Vim bundle '#{vundle}'"
+          end
+          if stderr.eof? and line.to_i != 0
+            error "Could not initialize Vim bundles"
+          end
+        end
+      end
+      begin
+        threads.each(&:join)
+        stdios.each(&:close)
+      rescue Exception => e
+        error e.message if e.class == IOError
+      end
+    end
+  end
+
+  desc 'Update Vim bundles'
+  task :update => :init do
+    next unless File.directory?(File.join(VUNDLE_DIR_PATH, '.git'))
+    Open3.popen3(
+      "vim -c 'silent!" +
+        "redir >> /dev/stdout " +
+          "| execute \"BundleInstall!\" " +
+          "| only " +
+          "| quitall!';" +
+      "echo $? 1>&2"
+    ) do |stdin, stdout, stderr|
+      stdios = [stdin, stdout, stderr]
+      threads = []
+      threads << Thread.new do
+        Thread.current.abort_on_exception = true
+        # Vim will not run without reading stdout,
+        # might as well parse its output.
+        stdout.each do |line|
+          bundle = bundle_path(line)
+          next unless bundle
+          bundle_relative = bundle.gsub("#{CONFIG_DIR_PATH}/", '')
+          info "Updating: #{bundle_relative}"
+          if line =~ /Error processing '([^']+)'/
+            error "Could not update Vim bundle '#{bundle_relative}'"
+          end
+        end
+      end
+      threads << Thread.new do
+        Thread.current.abort_on_exception = true
+        stderr.each do |line|
+          if stderr.eof? and line.to_i != 0
+            error "Could not update Vim bundles"
+          end
+        end
+      end
+      begin
+        threads.each(&:join)
+        stdios.each(&:close)
+      rescue Exception => e
+        error e.message if e.class == IOError
+      end
+    end
+  end
+
+  desc 'Clean Vim bundles'
+  task :clean do
+    next unless File.exists?('vimrc') and File.directory?('vim')
+    Open3.popen3(
+      "vim -c 'silent!" +
+        "redir >> /dev/stdout " +
+          "| execute \"BundleClean!\" "+
+          "| only " +
+          "| quitall!'; " +
+      "echo $? 1>&2"
+    ) do |stdin, stdout, stderr|
+      stdios = [stdin, stdout, stderr]
+      threads = []
+      threads << Thread.new do
+        Thread.current.abort_on_exception = true
+        # Vim will not run without reading stdout,
+        # might as well parse its output.
+        stdout.each do |line|
+          bundle = bundle_path(line)
+          next unless bundle
+          bundle_relative = bundle.gsub("#{CONFIG_DIR_PATH}/", '')
+          info "Removing: #{bundle_relative}"
+          if line =~ /Error processing '([^']+)'/
+            error "Could not remove Vim bundle '#{bundle_relative}'"
+          end
+        end
+      end
+      threads << Thread.new do
+        Thread.current.abort_on_exception = true
+        stderr.each do |line|
+          if stderr.eof? and line.to_i != 0
+            error "Could not clean Vim bundles"
+          end
+        end
+      end
+      begin
+        threads.each(&:join)
+        stdios.each(&:close)
+      rescue Exception => e
+        error e.message if e.class == IOError
+      end
+    end
+  end
+end
+
 desc 'Render raw dot files'
 task :render do
   Dir["#{CONFIG_DIR_PATH}/**/*.#{RAW_FILE_EXTENSION}"].each do |source|
@@ -205,246 +450,7 @@ task :render do
   end
 end
 
-desc 'Symlink dot files'
-task :symlink do
-  Dir["#{CONFIG_DIR_PATH}/*"].each do |source|
-    target_relative = source.gsub("#{CONFIG_DIR_PATH}/", '')
-    target_backup = File.join(BACKUP_DIR_PATH, target_relative)
-    target = File.join(ENV['HOME'], ".#{target_relative}")
-    # Do not link if the source is a raw file, the target already exists and
-    # is a symlink to the source.
-    next if source =~ RAW_FILE_EXTENSION_REGEXP \
-      or excluded?(target_relative) \
-      or (File.exists?(target) \
-        and File.ftype(target) == 'link' \
-        and File.identical?(source, target))
-    info "Linking: #{target}"
-    begin
-      backup(target, target_backup)
-    rescue IOError
-      error "Could not backup '#{target}', will skip symlinking '#{source}'"
-      next
-    end
-    begin
-      File.symlink(source, target)
-    rescue IOError
-      error "Could not symlink '#{source}' to '#{target}'"
-    end
-  end
-end
-
-desc 'Unlink broken symlinks'
-task :clean do
-  Dir["#{ENV['HOME']}/.*"].each do |item|
-    if File.ftype(item) == 'link'
-      unless File.exists? item
-        info "Unlinking: #{item}"
-        begin
-          File.unlink item
-        rescue IOError
-          error "Could not unlink '#{item}'"
-        end
-      end
-    end
-  end
-end
-
-desc 'Initialize submodules'
-task :init do
-  if File.exists? '.gitmodules'
-    # Popen3 does not return the exit status code.
-    # Echo it onto the last line of stderr.
-    Open3.popen3(
-      "git submodule update --init --recursive; echo $? 1>&2"
-    ) do |stdin, stdout, stderr|
-      stdios = [stdin, stdout, stderr]
-      threads = []
-      threads << Thread.new do
-        Thread.current.abort_on_exception = true
-        stdout.each do |line|
-          next if line !~ /^Cloning into .*\.{3}$/
-          info line.gsub(/^Cloning into (.*)\.{3}$/, "Initializing: \\1")
-        end
-      end
-      threads << Thread.new do
-        Thread.current.abort_on_exception = true
-        stderr.each do |line|
-          if line =~ /Unable to checkout '[^']+' in submodule path '([^']+)'/
-            error "Could not initialize submodule '#{$1}'"
-          end
-          if stderr.eof? and line.to_i != 0
-            error "Could not initialize submodules"
-          end
-        end
-      end
-      begin
-        threads.each(&:join)
-        stdios.each(&:close)
-      rescue Exception => e
-        error e.message if e.class == IOError
-      end
-    end
-  end
-end
-
-desc 'Update submodules'
-task :update do
-  if File.exists? '.gitmodules'
-    # Popen3 does not return the exit status code.
-    # Echo it onto the last line of stderr.
-    Open3.popen3(
-      "git submodule foreach git pull origin master; echo $? 1>&2"
-    ) do |stdin, stdout, stderr|
-      stdios = [stdin, stdout, stderr]
-      threads = []
-      thread << Thread.new do
-        stdout.each do |line|
-          if line =~ /Entering '([^']+)'/
-            info "Updating: #{$1}"
-          end
-        end
-      end
-      threads << Thread.new do
-        stderr.each do |line|
-          if line =~ /Stopping at '([^']+)'/
-            error "Could not update submodule '#{$1}'"
-          end
-          if stderr.eof? and line.to_i != 0
-            error "Could not update submodules"
-          end
-        end
-      end
-      begin
-        threads.each(&:join)
-        stdios.each(&:close)
-        Rake::Task[:make].invoke
-      rescue Exception => e
-        error e.message if e.class == IOError
-      end
-    end
-  end
-end
-
-desc 'Initialize Vim bundles'
-task :'init-bundle' do
-  next unless File.exists?('vimrc') and File.directory?('vim')
-  next if File.directory?(File.join(VUNDLE_DIR_PATH, '.git'))
-  info "Initializing: #{VUNDLE_DIR_PATH}".gsub("#{CONFIG_DIR_PATH}/", '')
-  Open3.popen3(
-    "git clone '#{VUNDLE_REMOTE_URL}' '#{VUNDLE_DIR_PATH}'; echo $? 1>&2"
-  ) do |stdin, stdout, stderr|
-    vundle = File.basename VUNDLE_DIR_PATH
-    stdios = [stdin, stdout, stderr]
-    threads = []
-    threads << Thread.new do
-      Thread.current.abort_on_exception = true
-      stderr.each do |line|
-        if line =~ /^fatal: (.*)$/
-          error "Could not initialize Vim bundle '#{vundle}'"
-        end
-        if stderr.eof? and line.to_i != 0
-          error "Could not initialize Vim bundles"
-        end
-      end
-    end
-    begin
-      threads.each(&:join)
-      stdios.each(&:close)
-    rescue Exception => e
-      error e.message if e.class == IOError
-    end
-  end
-end
-
-desc 'Update Vim bundles'
-task :'update-bundle' => [:'init-bundle'] do
-  next unless File.directory?(File.join(VUNDLE_DIR_PATH, '.git'))
-  Open3.popen3(
-    "vim -c 'silent!" +
-      "redir >> /dev/stdout " +
-        "| execute \"BundleInstall!\" " +
-        "| only " +
-        "| quitall!';" +
-    "echo $? 1>&2"
-  ) do |stdin, stdout, stderr|
-    stdios = [stdin, stdout, stderr]
-    threads = []
-    threads << Thread.new do
-      Thread.current.abort_on_exception = true
-      # Vim will not run without reading stdout,
-      # might as well parse its output.
-      stdout.each do |line|
-        bundle = bundle_path(line)
-        next unless bundle
-        bundle_relative = bundle.gsub("#{CONFIG_DIR_PATH}/", '')
-        info "Updating: #{bundle_relative}"
-        if line =~ /Error processing '([^']+)'/
-          error "Could not update Vim bundle '#{bundle_relative}'"
-        end
-      end
-    end
-    threads << Thread.new do
-      Thread.current.abort_on_exception = true
-      stderr.each do |line|
-        if stderr.eof? and line.to_i != 0
-          error "Could not update Vim bundles"
-        end
-      end
-    end
-    begin
-      threads.each(&:join)
-      stdios.each(&:close)
-    rescue Exception => e
-      error e.message if e.class == IOError
-    end
-  end
-end
-
-desc 'Clean Vim bundles'
-task :'clean-bundle' do
-  next unless File.exists?('vimrc') and File.directory?('vim')
-  Open3.popen3(
-    "vim -c 'silent!" +
-      "redir >> /dev/stdout " +
-        "| execute \"BundleClean!\" "+
-        "| only " +
-        "| quitall!'; " +
-    "echo $? 1>&2"
-  ) do |stdin, stdout, stderr|
-    stdios = [stdin, stdout, stderr]
-    threads = []
-    threads << Thread.new do
-      Thread.current.abort_on_exception = true
-      # Vim will not run without reading stdout,
-      # might as well parse its output.
-      stdout.each do |line|
-        bundle = bundle_path(line)
-        next unless bundle
-        bundle_relative = bundle.gsub("#{CONFIG_DIR_PATH}/", '')
-        info "Removing: #{bundle_relative}"
-        if line =~ /Error processing '([^']+)'/
-          error "Could not remove Vim bundle '#{bundle_relative}'"
-        end
-      end
-    end
-    threads << Thread.new do
-      Thread.current.abort_on_exception = true
-      stderr.each do |line|
-        if stderr.eof? and line.to_i != 0
-          error "Could not clean Vim bundles"
-        end
-      end
-    end
-    begin
-      threads.each(&:join)
-      stdios.each(&:close)
-    rescue Exception => e
-      error e.message if e.class == IOError
-    end
-  end
-end
-
-desc 'Make submodules'
+desc 'Make submodules and bundles'
 task :make do
   Dir["#{CONFIG_DIR_PATH}/**/Rakefile"].each do |rake_file|
     next if SCRIPT_PATH.join('/') == rake_file
@@ -486,7 +492,7 @@ task :make do
 end
 
 desc 'Uninstall dot files'
-task :uninstall => [:clean] do
+task :uninstall => 'link:clean' do
   Dir["#{CONFIG_DIR_PATH}/*"].each do |source|
     target_relative = source.gsub("#{CONFIG_DIR_PATH}/", '')
     target = File.join(ENV['HOME'], ".#{target_relative}")
@@ -507,14 +513,14 @@ end
 
 desc 'Install dot files'
 task :install => [
-  :init,
-  :make,
-  :clean,
-  :render,
-  :symlink,
-  :'init-bundle',
-  :'update-bundle',
-  :'clean-bundle'
+  'module:init',
+  'render',
+  'link:create',
+  'link:clean',
+  'bundle:init',
+  'bundle:update',
+  'bundle:clean',
+  'make'
 ] do
   info "Backup: #{BACKUP_DIR_PATH}" if File.directory? BACKUP_DIR_PATH
 end
