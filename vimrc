@@ -2,7 +2,7 @@
 "          FILE: .vimrc
 "   DESCRIPTION: Vim configuration file
 "        AUTHOR: Sorin Ionescu <sorin.ionescu@gmail.com>
-"       VERSION: 1.3.7
+"       VERSION: 1.3.8
 " ----------------------------------------------------------------------------
 
 " Version Check ---------------------------------------------------------- {{{
@@ -57,6 +57,15 @@ Bundle 'vim-scripts/AnsiEsc.vim'
 " Resizes the current buffer to accommodate its content.
 Bundle 'roman/golden-ratio'
 
+" Show marks in a gutter.
+Bundle 'garbas/vim-showmarks'
+
+" Easily navigate to a letter.
+Bundle 'Lokaltog/vim-easymotion'
+
+" History of yanks, changes, and deletes.
+Bundle 'vim-scripts/YankRing.vim'
+
 " }}}
 " Color Scheme ----------------------------------------------------------- {{{
 
@@ -67,13 +76,17 @@ Bundle 'altercation/vim-colors-solarized'
 " Syntax ----------------------------------------------------------------- {{{
 
 Bundle 'tpope/vim-markdown'
-Bundle 'timcharper/textile.vim'
+" Bundle 'timcharper/textile.vim'
+" Bundle 'andrewschleifer/nu-vim'
 
 " }}}
 " File Navigation -------------------------------------------------------- {{{
 
 " Buffer and file navigation.
 Bundle 'kien/ctrlp.vim'
+
+" Tag manager.
+" Bundle 'kien/tabman.vim'
 
 " }}}
 " Programming ------------------------------------------------------------ {{{
@@ -94,7 +107,7 @@ Bundle 'majutsushi/tagbar'
 Bundle 'scrooloose/syntastic'
 
 " Comment and uncomment code.
-Bundle 'tpope/vim-commentary'
+Bundle 'tomtom/tcomment_vim'
 
 " Insert-completion via the tab key.
 Bundle 'ervandew/supertab'
@@ -150,40 +163,46 @@ Bundle 'sjl/threesome.vim'
 " }}}
 " Web Development -------------------------------------------------------- {{{
 
-" Parses condensed HTML format.
-Bundle 'bingaman/vim-sparkup'
+" Expands condensed HTML.
+Bundle 'mattn/zencoding-vim'
 
 " Translates markdown into HTML for previewing.
 Bundle 'nelstrom/vim-markdown-preview'
 
-" CoffeeScript language.
-Bundle 'kchmck/vim-coffee-script'
-
 " HTML langauge.
 Bundle 'othree/html5.vim'
-
-" CSS language.
-Bundle 'https://github.com/ChrisYip/Better-CSS-Syntax-for-Vim.git'
-
-" JavaScript language.
-Bundle 'pangloss/vim-javascript'
 
 " Validate HTML files.
 Bundle 'sorin-ionescu/vim-htmlvalidator'
 
+" CSS language.
+Bundle 'https://github.com/ChrisYip/Better-CSS-Syntax-for-Vim.git'
+
+" LESS (dynamic CSS) language.
+" Bundle 'groenewege/vim-less'
+
+" JavaScript language.
+Bundle 'pangloss/vim-javascript'
+
 " Compiler for JavaScript Lint.
-Bundle 'vim-scripts/compilerjsl.vim'
+" Bundle 'vim-scripts/compilerjsl.vim'
 
 " jQuery JavaScript framework.
-Bundle 'vim-scripts/jQuery'
+" Bundle 'vim-scripts/jQuery'
+
+" CoffeeScript language.
+" Bundle 'kchmck/vim-coffee-script'
 
 " }}}
 " Ruby/Rails ------------------------------------------------------------- {{{
 
-" Ruby langauge support.
+" Ruby langauge.
 Bundle 'vim-ruby/vim-ruby'
 
-" Text object for selecting ruby blocks.
+" Ruby refactoring tool (dependency: matchit).
+" Bundle 'ecomba/vim-ruby-refactoring'
+
+" Text object for selecting ruby blocks (dependency: matchit).
 Bundle 'nelstrom/vim-textobj-rubyblock'
 
 " Quickly converts Ruby blocks between {} and begin/end.
@@ -210,6 +229,9 @@ Bundle 'sorin-ionescu/vim-ruby-block-conv'
 " Runs Ruby tests, RSpec, shoulda, cucumber.
 " Bundle 'janx/vim-rubytest'
 
+" Runs RSpec tests (dependency: hpricot gem).
+" Bundle 'skwp/vim-rspec'
+
 " A macro behavior-driven development testing framework.
 " Bundle 'tpope/vim-cucumber'
 
@@ -220,7 +242,7 @@ Bundle 'sorin-ionescu/vim-ruby-block-conv'
 " Python ----------------------------------------------------------------- {{{
 
 " Almost everything needed for Python programming.
-Bundle 'klen/python-mode'
+" Bundle 'klen/python-mode'
 
 " }}}
 " Org-Mode --------------------------------------------------------------- {{{
@@ -1005,6 +1027,18 @@ let g:microdata_attributes_complete = 0
 let g:atia_attributes_complete = 0
 
 " }}}
+" Indent Guides ---------------------------------------------------------- {{{
+
+" Auto calculate guide colors.
+let g:indent_guides_auto_colors = 1
+
+" Use skinny guides.
+let g:indent_guides_guide_size = 1
+
+" Indent from level 2.
+let g:indent_guides_start_level = 2
+
+" }}}
 " Markdown Preview  ------------------------------------------------------ {{{
 
 " Map Leader + P to preview.
@@ -1044,6 +1078,15 @@ let ropevim_guess_project = 1
 let ropevim_global_prefix = '<C-c>p'
 
 " }}}
+" Showmarks -------------------------------------------------------------- {{{
+
+" Do not enable showmarks at startup.
+let g:showmarks_enable = 0
+
+" Do not include the various brace marks (), {}, etc.
+let g:showmarks_include = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXY"
+
+" }}}
 " Solarized -------------------------------------------------------------- {{{
 
 if exists('g:colors_name') && g:colors_name == 'solarized'
@@ -1071,11 +1114,22 @@ let g:surround_60 = "<\r>"
 " }}}
 " Syntastic -------------------------------------------------------------- {{{
 
+" Mark syntax errors with :signs.
 let g:syntastic_enable_signs = 1
+
+" Do not auto jump to the error when saving a file.
 let g:syntastic_auto_jump = 0
+
+" Do not auto show the error list.
 let g:syntastic_auto_loc_list = 0
+
+" Show warnings.
 let g:syntastic_quiet_warnings = 0
+
+" Do not validate the following file types.
 let g:syntastic_disabled_filetypes = ['html', 'python']
+
+" Set the display format.
 let g:syntastic_stl_format = '[%E{Err: %fe #%e}%B{, }%W{Warn: %fw #%w}]'
 
 " }}}
@@ -1087,7 +1141,7 @@ let g:tagbar_expand = 1          " Expand window in GUI mode.
 
 map <Leader>i <Plug>TagbarToggle
 
-" Define custom ZSH support (requires definition in ~/.ctags).
+" Define custom Zsh support (requires definition in ~/.ctags).
 let g:tagbar_type_zsh = {
   \ 'ctagstype': 'zsh',
   \ 'kinds': [
@@ -1100,6 +1154,14 @@ let g:tagbar_type_zsh = {
 " TaskList --------------------------------------------------------------- {{{
 
 map <Leader>T <Plug>TaskList
+
+" }}}
+" Tcomment --------------------------------------------------------------- {{{
+
+" Map 'gcp' comment the current paragraph (block).
+if exists('loaded_tcomment')
+    nmap <silent> gcp <c-_>p
+endif
 
 " }}}
 " Threesome -------------------------------------------------------------- {{{
@@ -1122,6 +1184,12 @@ let g:threesome_initial_scrollbind_compare = 0
 let g:threesome_initial_scrollbind_path = 0
 
 let g:threesome_wrap = "nowrap"
+
+" }}}
+" Yankring --------------------------------------------------------------- {{{
+
+" Hide the history file.
+let g:yankring_history_file = '.yankring-history'
 
 " }}}
 
