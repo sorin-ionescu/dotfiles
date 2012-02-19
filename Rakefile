@@ -2,7 +2,7 @@
 #          FILE:  Rakefile
 #   DESCRIPTION:  Installs and uninstalls dot files.
 #        AUTHOR:  Sorin Ionescu <sorin.ionescu@gmail.com>
-#       VERSION:  2.1.3
+#       VERSION:  2.1.4
 #------------------------------------------------------------------------------
 
 require 'date'
@@ -155,6 +155,16 @@ def excluded?(path)
   return excluded
 end
 
+# Returns whether a command exists in PATH.
+#
+# @param [String] command the name of the command.
+# @return [true, false] if true, the command exists; otherwise, it does not.
+def exists?(command)
+  ENV['PATH'].split(':').any? do |directory|
+    File.exists?(File.join(directory, command))
+  end
+end
+
 # Returns the absolute path to a Vim bundle.
 #
 # @param [String] line the line to be parsed.
@@ -223,6 +233,10 @@ namespace :module do
   desc 'Initialize submodules'
   task :init do
     if File.exists? '.gitmodules'
+      unless exists?('git')
+        error "Could not initialize submodules, Git is not found"
+        next
+      end
       # Popen3 does not return the exit status code.
       # Echo it onto the last line of stderr.
       Open3.popen3(
@@ -261,6 +275,10 @@ namespace :module do
   desc 'Update submodules'
   task :update do
     if File.exists? '.gitmodules'
+      unless exists?('git')
+        error "Could not update submodules, Git is not found"
+        next
+      end
       # Popen3 does not return the exit status code.
       # Echo it onto the last line of stderr.
       Open3.popen3(
@@ -302,6 +320,10 @@ namespace :bundle do
   task :init do
     next unless File.exists?('vimrc') and File.directory?('vim')
     next if File.directory?(File.join(VUNDLE_DIR_PATH, '.git'))
+    unless exists?('git')
+      error "Could not initialize Vim bundles, Git is not found"
+      next
+    end
     info "Initializing: #{VUNDLE_DIR_PATH}".gsub("#{CONFIG_DIR_PATH}/", '')
     Open3.popen3(
       "git clone '#{VUNDLE_REMOTE_URL}' '#{VUNDLE_DIR_PATH}'; echo $? 1>&2"
@@ -332,6 +354,10 @@ namespace :bundle do
   desc 'Update Vim bundles'
   task :update => :init do
     next unless File.directory?(File.join(VUNDLE_DIR_PATH, '.git'))
+    unless exists?('git')
+      error "Could not update Vim bundles, Git is not found"
+      next
+    end
     Open3.popen3(
       "vim -c 'silent!" +
         "redir >> /dev/stdout " +
