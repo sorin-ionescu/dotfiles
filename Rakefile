@@ -375,7 +375,7 @@ namespace :bundle do
 
   desc 'Clean Vim bundles'
   task :clean do
-    next unless File.exists?('vimrc') and File.directory?('vim')
+    next unless File.exists?('vimrc') and File.directory?('vim/bundle/vundle')
     Open3.popen3(
       "vim -c 'silent!" +
         "redir >> /dev/stdout " +
