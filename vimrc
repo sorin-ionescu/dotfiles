@@ -2,7 +2,7 @@
 "          FILE: .vimrc
 "   DESCRIPTION: Vim configuration file
 "        AUTHOR: Sorin Ionescu <sorin.ionescu@gmail.com>
-"       VERSION: 1.3.8
+"       VERSION: 1.3.9
 " ----------------------------------------------------------------------------
 
 " Version Check ---------------------------------------------------------- {{{
@@ -14,7 +14,10 @@ endif
 " }}}
 " Bundles ---------------------------------------------------------------- {{{
 
- " Turning filetype off is necessary to load ftdetect files.
+" Turn off vi compatibility.
+set nocompatible
+
+" Turning filetype off is necessary to load ftdetect files.
 filetype off
 
 " Install Vundle for bundles to work:
@@ -254,9 +257,6 @@ Bundle 'sorin-ionescu/vim-ruby-block-conv'
 
 " }}}
 " General Settings ------------------------------------------------------- {{{
-
-" Turn off vi compatibility.
-set nocompatible
 
 " SECURE: Do not parse mode comments in files.
 set modelines=0
