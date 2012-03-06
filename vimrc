@@ -2,13 +2,14 @@
 "          FILE: .vimrc
 "   DESCRIPTION: Vim configuration file
 "        AUTHOR: Sorin Ionescu <sorin.ionescu@gmail.com>
-"       VERSION: 1.3.9
+"       VERSION: 1.3.10
 " ----------------------------------------------------------------------------
 
 " Version Check ---------------------------------------------------------- {{{
 
 if v:version < 703
-    echo '.vimrc uses features than are only available in Vim 7.3 or greater.'
+    echo '.vimrc requires Vim 7.3 or greater'
+    finish
 endif
 
 " }}}
