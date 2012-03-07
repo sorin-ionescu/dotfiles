@@ -401,9 +401,6 @@ set matchtime=3
 " Pairs to match.
 set matchpairs+=<:>
 
-" Highlight the current line.
-set cursorline
-
 " Print syntax highlighting.
 set printoptions+=syntax:y
 
@@ -775,6 +772,19 @@ au VimResized * exe "normal! \<c-w>="
 " Strip trailing whitespace.
 au BufWritePre,FileWritePre,FileAppendPre,FilterWritePre *
     \ call StripTrailingWhitespace()
+
+" Cursorline ------------------------------------------------------------- {{{
+
+" Highlight the current line in the current window.
+aug cursorline
+    au!
+    au BufEnter * set cursorline
+    au BufLeave * set nocursorline
+    au InsertEnter * set nocursorline
+    au InsertLeave * set cursorline
+aug end
+
+" }}}
 
 " }}}
 " File Settings ---------------------------------------------------------- {{{
