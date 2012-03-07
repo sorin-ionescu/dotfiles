@@ -413,6 +413,9 @@ set printoptions+=number:y
 " Enable error jumping.
 set cf
 
+" Set diff fill char.
+set fillchars+=diff:⣿
+
 " Enable syntax highlighting.
 syntax on
 
