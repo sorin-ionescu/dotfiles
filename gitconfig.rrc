@@ -44,7 +44,7 @@
 	enabled = true
 [diff]
 	tool = vimdiff
-	guitool = Kaleidoscope
+	guitool = ksdiff
 	mnemonicprefix = true
 	renames = copies
 [difftool]
@@ -66,5 +66,5 @@
 [mergetool "threesome"]
 	cmd = "vim -f \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\" -c 'ThreesomeInit'"
 	trustExitCode = true
-[difftool "Kaleidoscope"]
+[difftool "ksdiff"]
 	cmd = ksdiff-wrapper git \"$LOCAL\" \"$REMOTE\"
