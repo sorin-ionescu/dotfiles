@@ -283,6 +283,9 @@ set backspace=indent,eol,start
 " Keep a backup file.
 set backup
 
+" Do not back up temporary files.
+set backupskip=/tmp/*,/private/tmp/*"
+
 " Store backup files in one place.
 set backupdir^=$HOME/.vim/backup//
 
