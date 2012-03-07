@@ -840,6 +840,14 @@ aug ft_html
 aug end
 
 " }}}
+" Mail-------------------------------------------------------------------- {{{
+
+aug ft_mail
+    au!
+    au Filetype mail setlocal spell
+aug end
+
+" }}}
 " Markdown --------------------------------------------------------------- {{{
 
 aug ft_markdown
