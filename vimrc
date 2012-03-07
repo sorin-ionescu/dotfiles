@@ -1282,6 +1282,14 @@ vnoremap <Leader>Ac :center<CR>
 vnoremap <Leader>Ar :right<CR>
 
 " }}}
+" Text Movement ---------------------------------------------------------- {{{
+
+noremap <Leader>j :m+<CR>
+noremap <Leader>k :m-2<CR>
+vnoremap <Leader>j :m'>+<CR>gv
+vnoremap <Leader>k :m-2<CR>gv
+
+" }}}
 " Miscellaneous Mappings ------------------------------------------------- {{{
 
 " Disable search match highlight.
