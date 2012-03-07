@@ -442,7 +442,7 @@ catch /E185:/
 endtry
 
 " }}}
-" User Interface --------------------------------------------------------- {{{
+" Graphical Interface ---------------------------------------------------- {{{
 
 if has('gui_running')
     " Use a good font.
@@ -518,7 +518,7 @@ if has('title') && (has('gui_running') || &title)
 endif
 
 " }}}
-" Terminal Settings ------------------------------------------------------ {{{
+" Terminal Interface ----------------------------------------------------- {{{
 
 if &term =~ 'xterm'
     if &termencoding == ''
