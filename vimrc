@@ -1143,6 +1143,41 @@ let g:tagbar_expand = 1          " Expand window in GUI mode.
 
 map <Leader>i <Plug>TagbarToggle
 
+" Define custom Objective-C support (requires ctags SVN).
+let g:tagbar_type_objc = {
+    \ 'ctagstype' : 'ObjectiveC',
+    \ 'kinds'     : [
+        \ 'i:interface',
+        \ 'I:implementation',
+        \ 'p:protocol',
+        \ 'm:instance method',
+        \ 'c:class method',
+        \ 'v:global variable',
+        \ 'F:instance field',
+        \ 'f:function',
+        \ 'p:property',
+        \ 't:type alias',
+        \ 's:type structure',
+        \ 'e:enumeration',
+        \ 'M:preprocessor macro',
+    \ ],
+    \ 'sro' : ' ',
+    \ 'kind2scope' : {
+        \ 'i' : 'interface',
+        \ 'I' : 'implementation',
+        \ 'p' : 'protocol',
+        \ 's' : 'type structure',
+        \ 'e' : 'enumeration'
+    \ },
+    \ 'scope2kind' : {
+        \ 'interface'      : 'i',
+        \ 'implementation' : 'I',
+        \ 'protocol'       : 'p',
+        \ 'type structure' : 's',
+        \ 'enumeration'    : 'e'
+    \ }
+\ }
+
 " Define custom Zsh support (requires definition in ~/.ctags).
 let g:tagbar_type_zsh = {
     \ 'ctagstype': 'zsh',
