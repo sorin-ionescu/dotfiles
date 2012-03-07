@@ -908,6 +908,14 @@ aug ft_django
 aug end
 
 " }}}
+" QuickFix --------------------------------------------------------------- {{{
+
+aug ft_quickfix
+    au!
+    au Filetype qf setlocal colorcolumn=0 nolist nocursorline nowrap
+aug end
+
+" }}}
 " Text ------------------------------------------------------------------- {{{
 
 aug ft_text
