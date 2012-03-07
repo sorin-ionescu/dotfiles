@@ -799,6 +799,15 @@ aug cursorline
 aug end
 
 " }}}
+" Trailing Whitespace ---------------------------------------------------- {{{
+
+aug trailing
+    au!
+    au InsertEnter * :set listchars-=trail:⌴
+    au InsertLeave * :set listchars+=trail:⌴
+aug end
+
+" }}}
 
 " }}}
 " File Settings ---------------------------------------------------------- {{{
