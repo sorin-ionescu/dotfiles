@@ -2,7 +2,7 @@
 "          FILE: .vimrc
 "   DESCRIPTION: Vim configuration file
 "        AUTHOR: Sorin Ionescu <sorin.ionescu@gmail.com>
-"       VERSION: 1.3.11
+"       VERSION: 1.3.12
 " ----------------------------------------------------------------------------
 
 " Version Check ---------------------------------------------------------- {{{
@@ -198,7 +198,7 @@ Bundle 'pangloss/vim-javascript'
 " Bundle 'vim-scripts/jQuery'
 
 " CoffeeScript language.
-" Bundle 'kchmck/vim-coffee-script'
+Bundle 'kchmck/vim-coffee-script'
 
 " }}}
 " Ruby/Rails ------------------------------------------------------------- {{{
@@ -821,6 +821,20 @@ aug ft_bash
 aug end
 
 " }}}
+" CoffeeScript ----------------------------------------------------------- {{{
+
+aug ft_coffee
+    au!
+    au FileType coffee
+        \ setlocal
+            \ tabstop=4
+            \ softtabstop=4
+            \ shiftwidth=4
+            \ textwidth=79
+            \ colorcolumn=80
+aug end
+
+" }}}
 " CSS -------------------------------------------------------------------- {{{
 
 aug ft_css
@@ -1175,6 +1189,49 @@ let g:tagbar_compact = 0         " Use compact layout.
 let g:tagbar_expand = 1          " Expand window in GUI mode.
 
 map <Leader>i <Plug>TagbarToggle
+
+" Define custom CoffeeScript support (requires definition in ~/.ctags).
+let g:tagbar_type_coffee = {
+    \ 'ctagstype' : 'coffee',
+    \ 'kinds' : [
+        \   'n:namespace',
+        \   'c:class',
+        \   'o:object',
+        \   'm:methods',
+        \   'f:functions',
+        \   'i:instance variables',
+        \   'v:var:1',
+    \ ],
+    \ 'sro' : ".",
+    \ 'scope2kind' : {
+        \   'o' : 'object',
+        \   'f' : 'function',
+        \   'm' : 'method',
+        \   'v' : 'var',
+        \   'i' : 'ivar'
+    \ },
+    \ 'kind2scope' : {
+        \  'function' : 'f',
+        \  'method' : 'm',
+        \  'var' : 'v',
+        \  'ivar' : 'i',
+        \ 'object' : 'o'
+    \},
+\ }
+
+let g:tagbar_type_coffee = {
+    \ 'kinds' : [
+        \ 'f:functions',
+        \ 'o:object'
+    \ ],
+    \ 'kind2scope' : {
+        \ 'f' : 'object',
+        \ 'o' : 'object'
+    \},
+    \ 'sro' : ".",
+    \ 'ctagsbin' : 'coffeetags',
+    \ 'ctagsargs' : '--include-vars',
+\}
 
 " Define custom Objective-C support (requires ctags SVN).
 let g:tagbar_type_objc = {
