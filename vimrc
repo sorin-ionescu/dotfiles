@@ -803,7 +803,7 @@ aug ft_css
 aug end
 
 " }}}
-" Git ---------------------------------------------------------------------{{{
+" Git -------------------------------------------------------------------- {{{
 
 aug ft_git
     au!
@@ -1131,11 +1131,11 @@ map <Leader>i <Plug>TagbarToggle
 
 " Define custom Zsh support (requires definition in ~/.ctags).
 let g:tagbar_type_zsh = {
-  \ 'ctagstype': 'zsh',
-  \ 'kinds': [
-    \ 'f:functions:1'
-  \ ],
-  \ 'fold': 0
+    \ 'ctagstype': 'zsh',
+    \ 'kinds': [
+        \ 'f:functions:1'
+    \ ],
+    \ 'fold': 0
 \ }
 
 " }}}
@@ -1456,13 +1456,13 @@ function! OpenURL()
     if s:uri != ""
         exec "!open \"" . s:uri . "\""
     else
-        echo "No URI found in line."
+        echo "No URI found in line"
     endif
 endfunction
 map <Leader>w :call OpenURL()<CR>
 
 " }}}
-" Error Toggles ---------------------------------------------------------- {{{
+" Error Toggle ----------------------------------------------------------- {{{
 
 command! ErrorsToggle call ErrorsToggle()
 function! ErrorsToggle()
