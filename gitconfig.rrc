@@ -58,13 +58,13 @@
 [mergetool]
 	prompt = false
 [mergetool "vimdiff3"]
-	cmd = "vim -f -d -c 'wincmd J' -c 'resize 10' \"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\""
+	cmd = vim -d -c 'wincmd J' -c 'resize 10' \"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"
 	trustExitCode = false
 [mergetool "gvimdiff3"]
-	cmd = "gvim -f -d -c 'wincmd J' -c 'resize 10' \"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\""
+	cmd = gvim -f -d -c 'wincmd J' -c 'resize 10' \"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"
 	trustExitCode = false
 [mergetool "threesome"]
-	cmd = "vim -f \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\" -c 'ThreesomeInit'"
+	cmd = vim -f -c 'ThreesomeInit' \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"
 	trustExitCode = true
 [difftool "ksdiff"]
 	cmd = ksdiff-wrapper git \"$LOCAL\" \"$REMOTE\"
