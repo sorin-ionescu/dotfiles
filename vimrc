@@ -668,7 +668,7 @@ set virtualedit+=block
 set nolist
 
 " List of characters to show instead of whitespace.
-set listchars=tab:▸\ ,eol:¬,trail:-,extends:❯,precedes:❮
+set listchars=tab:▸\ ,eol:¬,trail:⌴,extends:❯,precedes:❮
 
 " Highlight VCS conflict markers.
 match ErrorMsg '^\(<\|=\|>\)\{7\}\([^=].\+\)\?$'
