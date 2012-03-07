@@ -23,7 +23,7 @@ zstyle ':omz:terminal' auto-title 'yes'
 # Set the plugins to load (see $OMZ/plugins/).
 zstyle ':omz:load' plugin \
   'archive' 'git' 'osx' 'perl' 'python' 'ruby' 'z' \
-  'history-substring-search' 'gnu-utils'
+  'node' 'history-substring-search' 'gnu-utils'
 
 # Set the prompt theme to load.
 # Setting it to 'random' loads a random theme.
