@@ -1267,6 +1267,10 @@ nnoremap <Leader>q gqip
 " Reselect pasted text.
 nnoremap <Leader>v V`]
 
+" Reselect text ater indent/unindent.
+vnoremap < <gv
+vnoremap > >gv
+
 " Display-wise up/down movement instead of linewise.
 noremap j gj
 noremap k gk
