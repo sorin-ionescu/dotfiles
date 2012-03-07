@@ -2,7 +2,7 @@
 "          FILE: .vimrc
 "   DESCRIPTION: Vim configuration file
 "        AUTHOR: Sorin Ionescu <sorin.ionescu@gmail.com>
-"       VERSION: 1.3.10
+"       VERSION: 1.3.11
 " ----------------------------------------------------------------------------
 
 " Version Check ---------------------------------------------------------- {{{
@@ -30,6 +30,9 @@ call vundle#rc()
 
 " Manages Vim bundles.
 Bundle 'gmarik/vundle'
+
+" A better status bar.
+Bundle 'Lokaltog/vim-powerline'
 
 " Identifies file indentation.
 Bundle 'Raimondi/YAIFA'
@@ -440,7 +443,7 @@ endtry
 
 if has('gui_running')
     " Use a good font.
-    set guifont=Monaco:h12
+    set guifont=Monaco\ for\ Powerline:h12
 
     " Enable menu bar.
     set guioptions+=m
@@ -548,38 +551,8 @@ endif
 " Always show status.
 set laststatus=2
 
-" Reset status.
-set statusline=
-
-" Cut at start.
-set statusline+=%<
-
-" Flags and buffer number.
-set statusline+=\ %1*[%n%H%M%R%W]%*
-
-" File path.
-set statusline+=\ %-40f
-
-" Right align.
-set statusline+=%=
-
-" Paste Mode
-set statusline+=\ %1*%{HasPaste()}%*
-
-" Syntastic
-set statusline+=\ %#error#%{exists('g:loaded_syntastic_plugin')?SyntasticStatuslineFlag():''}%*
-
-" Git Branch
-set statusline+=\ %1*%{exists('g:loaded_fugitive')?fugitive#statusline():''}%*
-
-" File type.
-set statusline+=\ %1*%y%*%*
-
-" Line and column numbers.
-set statusline+=\ %10((%l,%c)%)
-
-" Percentage of file.
-set statusline+=\ %P\ "
+" Disable status line fill chars.
+set fillchars+=stl:\ ,stlnc:\ " Space.
 
 " }}}
 
@@ -1060,6 +1033,12 @@ let g:org_plugins = [
 let g:PreviewBrowsers='open'
 
 " }}}
+" Powerline -------------------------------------------------------------- {{{
+
+" Use fancy UTF-9 symbols (requires a patched font, see documentation).
+let g:Powerline_symbols = 'fancy'
+
+" }}}
 " Python by Dmitry Vasiliev ---------------------------------------------- {{{
 
 let python_highlight_all = 1
@@ -1502,17 +1481,6 @@ endfunction
 
 nmap <silent> <F3> :ErrorsToggle<CR>
 nmap <silent> <F4> :QFixToggle<CR>
-
-" }}}
-" Paste Mode ------------------------------------------------------------- {{{
-
-function! HasPaste()
-    if &paste
-        return '[paste]'
-    else
-        return ''
-    endif
-endfunction
 
 " }}}
 " Strip Trailing Whitespace ---------------------------------------------- {{{
