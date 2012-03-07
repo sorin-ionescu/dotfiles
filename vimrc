@@ -1505,16 +1505,16 @@ endfunction
 " }}}
 " Toggle Background ------------------------------------------------------ {{{
 
-function! ToggleBackground()
+function! BackgroundToggle()
     let &background = ( &background == "dark"? "light" : "dark" )
     if exists("g:colors_name")
         exe "colorscheme " . g:colors_name
     endif
 endfunction
-command! ToggleBackground :call ToggleBackground()
-silent! nnoremap <F2> :ToggleBackground<CR>
-silent! inoremap <F2> :ToggleBackground<CR>
-silent! vnoremap <F2> :ToggleBackground<CR>
+command! BackgroundToggle :call BackgroundToggle()
+silent! nnoremap <F2> :BackgroundToggle<CR>
+silent! inoremap <F2> :BackgroundToggle<CR>
+silent! vnoremap <F2> :BackgroundToggle<CR>
 
 " }}}
 
