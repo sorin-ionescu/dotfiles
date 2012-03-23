@@ -286,7 +286,7 @@ namespace :module do
       ) do |stdin, stdout, stderr|
         stdios = [stdin, stdout, stderr]
         threads = []
-        thread << Thread.new do
+        threads << Thread.new do
           stdout.each do |line|
             if line =~ /Entering '([^']+)'/
               info "Updating: #{$1}"
