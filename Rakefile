@@ -172,7 +172,7 @@ end
 def bundle_path(line)
   # Strip ANSI escape sequences (may output junk whitespace).
   line.gsub!(/\e\[?.*?[\@-~]/, '')
-  if line =~ /> Bundle '([^']+)'/
+  if line =~ /Processing '([^']+)'/
     # Get the bundle URL.
     bundle_url = $1
     # Strip junk whitespace.
