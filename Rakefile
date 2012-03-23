@@ -59,7 +59,6 @@ EXCLUDES = [
   '.gitignore',
   '.gitmodules',
   'README.md',
-  'terminal',
   /backup\/.*$/
 ]
 BUNDLE_DIR_PATH = File.join(CONFIG_DIR_PATH, 'vim/bundle')
