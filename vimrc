@@ -862,7 +862,7 @@ aug end
 
 aug ft_git
     au!
-    au FileType git* setlocal noexpandtab tabstop=4 shiftwidth=4
+    au FileType git* setlocal noexpandtab tabstop=4 shiftwidth=4 nofoldenable
 
 " Fugitive --------------------------------------------------------------- {{{
 
