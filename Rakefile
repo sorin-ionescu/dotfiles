@@ -2,7 +2,7 @@
 #          FILE:  Rakefile
 #   DESCRIPTION:  Installs and uninstalls dot files.
 #        AUTHOR:  Sorin Ionescu <sorin.ionescu@gmail.com>
-#       VERSION:  2.1.4
+#       VERSION:  2.1.5
 #------------------------------------------------------------------------------
 
 require 'date'
@@ -60,7 +60,10 @@ EXCLUDES = [
   '_MTN',
   '_darcs',
   'README.md',
-  /backup\/.*$/
+  /.*~$/,
+  /^\#.*\#$/,
+  /backup\/.*$/,
+  /vim\/(backup|swap|undo|view)\/.*$/
 ]
 BUNDLE_DIR_PATH = File.join(CONFIG_DIR_PATH, 'vim/bundle')
 VUNDLE_DIR_PATH = File.join(BUNDLE_DIR_PATH, 'vundle')
