@@ -879,7 +879,7 @@ aug ft_git
     " Auto-clean fugitive buffers.
     au BufReadPost fugitive://* set bufhidden=delete
 
-    " }}}
+" }}}
 
 aug end
 
