@@ -757,8 +757,8 @@ set wildignore+=*.pyc
 " Compiled spelling lists.
 set wildignore+=*.spl
 
-" Backup, auto save, swap, and view files.
-set wildignore+=*~,#*#,*.sw?,*=
+" Backup, auto save, swap, undo, and view files.
+set wildignore+=*~,#*#,*.sw?,%*,*=
 
 " Mac OS X.
 set wildignore+=*.DS_Store
