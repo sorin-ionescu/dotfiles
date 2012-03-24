@@ -1036,11 +1036,13 @@ let g:ctrlp_map = '<Leader>t'
 " Enable help tag, exuberant ctags, quickfix, and directory search.
 let g:ctrlp_extensions = ['tag', 'buffertag', 'quickfix', 'dir']
 
-" Map buffer search.
-nnoremap <Leader>b :CtrlPBuffer<CR>
+if exists('g:loaded_ctrlp')
+    " Map buffer search.
+    nnoremap <Leader>b :CtrlPBuffer<CR>
 
-" Map most recently used file search.
-nnoremap <Leader>m :CtrlPBuffer<CR>
+    " Map most recently used file search.
+    nnoremap <Leader>m :CtrlPMRU<CR>
+endif
 
 " }}}
 " Gist ------------------------------------------------------------------- {{{
