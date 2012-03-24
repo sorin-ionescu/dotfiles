@@ -1111,6 +1111,9 @@ let g:PreviewBrowsers='open'
 " Use fancy UTF-9 symbols (requires a patched font, see documentation).
 let g:Powerline_symbols = 'fancy'
 
+" Use short path.
+let g:Powerline_stl_path_style = 'filename'
+
 " }}}
 " Python by Dmitry Vasiliev ---------------------------------------------- {{{
 
