@@ -65,7 +65,7 @@ Bundle 'vim-scripts/AnsiEsc.vim'
 Bundle 'roman/golden-ratio'
 
 " Show marks in a gutter.
-Bundle 'garbas/vim-showmarks'
+Bundle 'vim-scripts/ShowMarks7'
 
 " Easily navigate to a letter.
 Bundle 'Lokaltog/vim-easymotion'
