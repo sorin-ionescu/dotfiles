@@ -1021,6 +1021,12 @@ let g:AutoComplPop_BehaviorKeywordLength = 4
 let g:CommandTMaxHeight = 10
 
 " }}}
+" Extradite -------------------------------------------------------------- {{{
+
+" Show the commit hash.
+let g:extradite_showhash = 1
+
+" }}}
 " CtrlP ------------------------------------------------------------------ {{{
 
 " Go up the file system until '.git', or similar, is found.
