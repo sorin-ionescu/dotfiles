@@ -47,17 +47,18 @@ BACKUP_DIR_PATH = File.join(
   DateTime.now.strftime('%Y-%m-%d-%H-%M-%S'))
 EXCLUDES = [
   SCRIPT_NAME,
-  '_darcs',
-  '_MTN',
-  '.svn',
+  '.DS_Store',
   '.bzr',
-  '.hg',
-  '.hgignore',
-  '.hgtags',
-  '.hgmodules',
   '.git',
   '.gitignore',
   '.gitmodules',
+  '.hg',
+  '.hgignore',
+  '.hgmodules',
+  '.hgtags',
+  '.svn',
+  '_MTN',
+  '_darcs',
   'README.md',
   /backup\/.*$/
 ]
