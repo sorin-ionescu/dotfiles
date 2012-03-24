@@ -2,7 +2,7 @@
 "          FILE: .vimrc
 "   DESCRIPTION: Vim configuration file
 "        AUTHOR: Sorin Ionescu <sorin.ionescu@gmail.com>
-"       VERSION: 1.3.12
+"       VERSION: 1.3.13
 " ----------------------------------------------------------------------------
 
 " Version Check ---------------------------------------------------------- {{{
@@ -1040,6 +1040,9 @@ let g:ctrlp_persistent_input = 0
 
 " Do not override Ctrl + P.
 let g:ctrlp_map = '<Leader>t'
+
+" Update results after typing has stopped.
+let g:ctrlp_lazy_update = 1
 
 " Enable help tag, exuberant ctags, quickfix, and directory search.
 let g:ctrlp_extensions = ['tag', 'buffertag', 'quickfix', 'dir']
