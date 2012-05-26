@@ -2,7 +2,7 @@
 "          FILE: .vimrc
 "   DESCRIPTION: Vim configuration file
 "        AUTHOR: Sorin Ionescu <sorin.ionescu@gmail.com>
-"       VERSION: 1.3.16
+"       VERSION: 1.3.17
 " ----------------------------------------------------------------------------
 
 " Version Check ---------------------------------------------------------- {{{
@@ -1043,6 +1043,9 @@ let g:extradite_showhash = 1
 " Go up the file system until '.git', or similar, is found.
 let g:ctrlp_working_path_mode = 2
 
+" Use '.git' as a marker, whether it's a directory or a file (submodule).
+let g:ctrlp_root_markers = ['.git']
+
 " Set the maximum height of the match window.
 let g:ctrlp_max_height = 10
 
@@ -1058,13 +1061,14 @@ let g:ctrlp_lazy_update = 1
 " Enable help tag, exuberant ctags, quickfix, and directory search.
 let g:ctrlp_extensions = ['tag', 'buffertag', 'quickfix', 'dir']
 
-if exists('g:loaded_ctrlp')
-    " Map buffer search.
-    nnoremap <Leader>b :CtrlPBuffer<CR>
+" Map buffer search.
+nnoremap <Leader>b :CtrlPBuffer<CR>
 
-    " Map most recently used file search.
-    nnoremap <Leader>m :CtrlPMRU<CR>
-endif
+" Map most recently used file search.
+nnoremap <Leader>m :CtrlPMRU<CR>
+
+" Map clear cache.
+nnoremap <Leader>c :CtrlPClearCache<CR>
 
 " }}}
 " Gist ------------------------------------------------------------------- {{{
