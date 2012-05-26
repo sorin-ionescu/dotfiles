@@ -50,22 +50,27 @@
 	renames = copies
 [difftool]
 	prompt = false
+[difftool "ksdiff"]
+	cmd = ksdiff-wrapper git \"$LOCAL\" \"$REMOTE\"
 [merge]
-	; conflictstyle = diff3
-	; tool = vimdiff3
-	conflictstyle = merge
-	tool = threesome
-	stat = true
+	tool = fugitive
 [mergetool]
 	prompt = false
 [mergetool "vimdiff3"]
-	cmd = vim -d -c 'wincmd J' -c 'resize 10' \"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"
+	cmd = vim -f -d -c \"wincmd J\" -c \"wincmd =\" \"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"
 	trustExitCode = false
 [mergetool "gvimdiff3"]
-	cmd = gvim -f -d -c 'wincmd J' -c 'resize 10' \"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"
+	cmd = gvim -f -d -c \"wincmd J\" -c \"wincmd =\" \"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"
 	trustExitCode = false
-[mergetool "threesome"]
-	cmd = vim -f -c 'ThreesomeInit' \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"
+[mergetool "fugitive"]
+	cmd = vim -f -c \"Gdiff\" \"$MERGED\" -c \"wincmd =\"
+	trustExitCode = false
+[mergetool "gfugitive"]
+	cmd = gvim -f-c \"Gdiff\" \"$MERGED\" -c \"wincmd =\"
+	trustExitCode = false
+[mergetool "splice"]
+	cmd = vim -f -c \"SpliceInit\" \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"
 	trustExitCode = true
-[difftool "ksdiff"]
-	cmd = ksdiff-wrapper git \"$LOCAL\" \"$REMOTE\"
+[mergetool "gsplice"]
+	cmd = gvim -f -c \"SpliceInit\" \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"
+	trustExitCode = true

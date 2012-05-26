@@ -114,10 +114,10 @@ keepthat.premerge = True
 keepthis.args = -c 'cp "$other" "$output.incoming" && cp "$local" "$output"'
 keepthis.executable = sh
 keepthis.premerge = True
-threesome.args = -f $base $local $other $output -c 'ThreesomeInit'
-threesome.executable = vim
-threesome.premerge = keep
-threesome.priority = 1
+splice.args = -f -c 'SpliceInit' $base $local $other $output
+splice.executable = vim
+splice.premerge = keep
+splice.priority = 1
 vimdiff.executable = vim
 vimdiff.args = -f -d -c 'wincmd J' -c 'resize 10' "$output" "$local" "$base" "$other"
 
