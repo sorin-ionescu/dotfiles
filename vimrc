@@ -2,7 +2,7 @@
 "          FILE: .vimrc
 "   DESCRIPTION: Vim configuration file
 "        AUTHOR: Sorin Ionescu <sorin.ionescu@gmail.com>
-"       VERSION: 1.3.14
+"       VERSION: 1.3.15
 " ----------------------------------------------------------------------------
 
 " Version Check ---------------------------------------------------------- {{{
@@ -91,6 +91,7 @@ Bundle 'tpope/vim-markdown'
 
 " Buffer and file navigation.
 Bundle 'kien/ctrlp.vim'
+" Bundle 'wincent/Command-T'
 
 " Tag manager.
 " Bundle 'kien/tabman.vim'
@@ -1017,8 +1018,13 @@ let g:AutoComplPop_BehaviorKeywordLength = 4
 " }}}
 " Command-T -------------------------------------------------------------- {{{
 
-" Set the maximum height of the match window.
-let g:CommandTMaxHeight = 10
+" " Set the maximum height of the match window.
+" let g:CommandTMaxHeight = 10
+"
+" " Bind commands.
+" nnoremap <silent> <Leader>t :CommandT<CR>
+" nnoremap <silent> <Leader>b :CommandTBuffer<CR>
+" nnoremap <silent> <Leader>f :CommandTFlush<CR>
 
 " }}}
 " Extradite -------------------------------------------------------------- {{{
