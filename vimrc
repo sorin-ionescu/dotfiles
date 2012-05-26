@@ -2,7 +2,7 @@
 "          FILE: .vimrc
 "   DESCRIPTION: Vim configuration file
 "        AUTHOR: Sorin Ionescu <sorin.ionescu@gmail.com>
-"       VERSION: 1.3.15
+"       VERSION: 1.3.16
 " ----------------------------------------------------------------------------
 
 " Version Check ---------------------------------------------------------- {{{
@@ -863,7 +863,12 @@ aug end
 
 aug ft_git
     au!
-    au FileType git* setlocal noexpandtab tabstop=4 shiftwidth=4 nofoldenable
+    au FileType git* setlocal
+        \ noexpandtab
+        \ tabstop=4
+        \ shiftwidth=4
+        \ nofoldenable
+        \ textwidth=72
 
 " Fugitive --------------------------------------------------------------- {{{
 
