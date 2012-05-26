@@ -2,7 +2,7 @@
 "          FILE: .vimrc
 "   DESCRIPTION: Vim configuration file
 "        AUTHOR: Sorin Ionescu <sorin.ionescu@gmail.com>
-"       VERSION: 1.3.13
+"       VERSION: 1.3.14
 " ----------------------------------------------------------------------------
 
 " Version Check ---------------------------------------------------------- {{{
@@ -165,7 +165,7 @@ Bundle 'int3/vim-extradite'
 Bundle 'mattn/gist-vim'
 
 " Merge conflict resolution.
-Bundle 'sjl/threesome.vim'
+Bundle 'sjl/splice.vim'
 
 " }}}
 " Web Development -------------------------------------------------------- {{{
@@ -1170,6 +1170,30 @@ if exists('g:colors_name') && g:colors_name == 'solarized'
 endif
 
 " }}}
+" Splice ----------------------------------------------------------------- {{{
+
+let g:splice_prefix = "<LocalLeader>-"
+
+let g:splice_initial_mode = "grid"
+
+let g:splice_initial_layout_grid = 1
+let g:splice_initial_layout_loupe = 0
+let g:splice_initial_layout_compare = 0
+let g:splice_initial_layout_path = 0
+
+let g:splice_initial_diff_grid = 1
+let g:splice_initial_diff_loupe = 0
+let g:splice_initial_diff_compare = 0
+let g:splice_initial_diff_path = 0
+
+let g:splice_initial_scrollbind_grid = 0
+let g:splice_initial_scrollbind_loupe = 0
+let g:splice_initial_scrollbind_compare = 0
+let g:splice_initial_scrollbind_path = 0
+
+let g:splice_wrap = "nowrap"
+
+" }}}
 " Surround --------------------------------------------------------------- {{{
 
 let g:surround_40 = "(\r)"
@@ -1305,28 +1329,6 @@ map <Leader>T <Plug>TaskList
 if exists('loaded_tcomment')
     nmap <silent> gcp <c-_>p
 endif
-
-" }}}
-" Threesome -------------------------------------------------------------- {{{
-
-let g:threesome_initial_mode = "grid"
-
-let g:threesome_initial_layout_grid = 1
-let g:threesome_initial_layout_loupe = 0
-let g:threesome_initial_layout_compare = 0
-let g:threesome_initial_layout_path = 0
-
-let g:threesome_initial_diff_grid = 1
-let g:threesome_initial_diff_loupe = 0
-let g:threesome_initial_diff_compare = 0
-let g:threesome_initial_diff_path = 0
-
-let g:threesome_initial_scrollbind_grid = 0
-let g:threesome_initial_scrollbind_loupe = 0
-let g:threesome_initial_scrollbind_compare = 0
-let g:threesome_initial_scrollbind_path = 0
-
-let g:threesome_wrap = "nowrap"
 
 " }}}
 " Yankring --------------------------------------------------------------- {{{
