@@ -2,7 +2,7 @@
 "          FILE: .vimrc
 "   DESCRIPTION: Vim configuration file
 "        AUTHOR: Sorin Ionescu <sorin.ionescu@gmail.com>
-"       VERSION: 1.3.19
+"       VERSION: 1.3.20
 " ----------------------------------------------------------------------------
 
 " Version Check ---------------------------------------------------------- {{{
@@ -1220,15 +1220,6 @@ let g:surround_60 = "<\r>"
 
 " }}}
 " Syntastic -------------------------------------------------------------- {{{
-
-" Mark syntax errors with :signs.
-let g:syntastic_enable_signs = 1
-
-" Do not auto jump to the error when saving a file.
-let g:syntastic_auto_jump = 0
-
-" Do not auto show the error list.
-let g:syntastic_auto_loc_list = 0
 
 " Show warnings.
 let g:syntastic_quiet_warnings = 0
