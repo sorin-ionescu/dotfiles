@@ -2,7 +2,7 @@
 "          FILE: .vimrc
 "   DESCRIPTION: Vim configuration file
 "        AUTHOR: Sorin Ionescu <sorin.ionescu@gmail.com>
-"       VERSION: 1.3.21
+"       VERSION: 1.3.22
 " ----------------------------------------------------------------------------
 
 " Version Check ---------------------------------------------------------- {{{
@@ -300,7 +300,7 @@ set dir^=$HOME/.vim/swap//
 set undodir^=$HOME/.vim/undo//
 
 " Store view files in one place.
-set viewdir^=$HOME/.vim/view//
+set viewdir=$HOME/.vim/view//
 
 " Save undo tree.
 set undofile
