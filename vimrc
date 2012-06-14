@@ -2,7 +2,7 @@
 "          FILE: .vimrc
 "   DESCRIPTION: Vim configuration file
 "        AUTHOR: Sorin Ionescu <sorin.ionescu@gmail.com>
-"       VERSION: 1.3.17
+"       VERSION: 1.3.18
 " ----------------------------------------------------------------------------
 
 " Version Check ---------------------------------------------------------- {{{
@@ -174,8 +174,8 @@ Bundle 'sjl/splice.vim'
 " Expands condensed HTML.
 Bundle 'mattn/zencoding-vim'
 
-" Translates markdown into HTML for previewing.
-Bundle 'nelstrom/vim-markdown-preview'
+" Translates markup languages into HTML for previewing.
+Bundle 'matthias-guenther/hammer.vim'
 
 " HTML langauge.
 Bundle 'othree/html5.vim'
@@ -1090,6 +1090,15 @@ nnoremap <Leader>U :GundoToggle<CR>
 let g:gundo_preview_bottom = 1
 
 " }}}
+" Hammer ----------------------------------------------------------------- {{{
+
+" Map Leader + P to preview.
+nmap <Leader>P :Hammer<CR>
+
+" Set the template.
+let g:HAMMER_TEMPLATE='typographic-light'
+
+" }}}
 " HTML5 ------------------------------------------------------------------ {{{
 
 let g:event_handler_attributes_complete = 0
@@ -1108,12 +1117,6 @@ let g:indent_guides_guide_size = 1
 
 " Indent from level 2.
 let g:indent_guides_start_level = 2
-
-" }}}
-" Markdown Preview  ------------------------------------------------------ {{{
-
-" Map Leader + P to preview.
-nmap <Leader>P :Mm<CR>
 
 " }}}
 " Org-Mode --------------------------------------------------------------- {{{
