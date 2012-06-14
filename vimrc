@@ -2,7 +2,7 @@
 "          FILE: .vimrc
 "   DESCRIPTION: Vim configuration file
 "        AUTHOR: Sorin Ionescu <sorin.ionescu@gmail.com>
-"       VERSION: 1.3.20
+"       VERSION: 1.3.21
 " ----------------------------------------------------------------------------
 
 " Version Check ---------------------------------------------------------- {{{
@@ -101,6 +101,9 @@ Bundle 'kien/ctrlp.vim'
 
 " A better paste.
 Bundle 'sickill/vim-pasta'
+
+" Sends the buffer contents to a REPL.
+" Bundle 'jpalardy/vim-slime'
 
 " A better grep.
 Bundle 'mileszs/ack.vim'
