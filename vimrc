@@ -2,7 +2,7 @@
 "          FILE: .vimrc
 "   DESCRIPTION: Vim configuration file
 "        AUTHOR: Sorin Ionescu <sorin.ionescu@gmail.com>
-"       VERSION: 1.3.18
+"       VERSION: 1.3.19
 " ----------------------------------------------------------------------------
 
 " Version Check ---------------------------------------------------------- {{{
@@ -657,7 +657,7 @@ set autoindent
 set wrap
 
 " Maximum line width before wrapping.
-set textwidth=85
+set textwidth=80
 
 " Describes how auto formatting is to be done.
 set formatoptions=qrn1
