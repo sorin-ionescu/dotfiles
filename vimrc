@@ -2,7 +2,7 @@
 "          FILE: .vimrc
 "   DESCRIPTION: Vim configuration file
 "        AUTHOR: Sorin Ionescu <sorin.ionescu@gmail.com>
-"       VERSION: 1.3.24
+"       VERSION: 1.3.25
 " ----------------------------------------------------------------------------
 
 " Version Check ---------------------------------------------------------- {{{
@@ -434,15 +434,32 @@ filetype plugin indent on
 
 " Set the color scheme.
 try
-    if match($ITERM_PROFILE, 'Dark') != -1
-        set background=dark
-    elseif match($ITERM_PROFILE, 'Light') != -1
-        set background=light
-    else
-        set background=dark
+    if match($TERM_PROGRAM, 'Apple_Terminal') != -1
+        let term_bg_rgb = split(system("osascript -e 'tell application \"Terminal\" to get background color of current settings of selected tab of front window'"), ', ')
+    elseif match($TERM_PROGRAM, 'iTerm') != -1
+        let term_bg_rgb = split(system("osascript -e 'tell application \"iTerm\" to get background color of current session of current terminal'"), ', ')
     endif
-    colorscheme solarized
-catch /E185:/
+
+    " Calculate luminance.
+    " Y = 0.2126 * R + 0.7152 * G + 0.0722 * B
+    " http://en.wikipedia.org/wiki/Luminance_(relative)
+    let coefficients = [0.2126, 0.7152, 0.0722]
+    let luminance = 0
+
+    for i in range(3)
+        let luminance += coefficients[i] * term_bg_rgb[i]
+    endfor
+
+    " Use a dark theme if luminance is less than 30%.
+    if luminance < (65535 * 0.3)
+	set background=dark
+        colorscheme Tomorrow-Night
+    else
+        set background=light
+        colorscheme Tomorrow
+    endif
+catch
+    echo 'Error: Could not set prefered color scheme'
     colorscheme default
 endtry
 
