@@ -2,7 +2,7 @@
 "          FILE: .vimrc
 "   DESCRIPTION: Vim configuration file
 "        AUTHOR: Sorin Ionescu <sorin.ionescu@gmail.com>
-"       VERSION: 1.3.22
+"       VERSION: 1.3.23
 " ----------------------------------------------------------------------------
 
 " Version Check ---------------------------------------------------------- {{{
@@ -78,6 +78,7 @@ Bundle 'vim-scripts/YankRing.vim'
 
 " A usable color scheme.
 Bundle 'altercation/vim-colors-solarized'
+Bundle 'chriskempson/vim-tomorrow-theme'
 
 " }}}
 " Syntax ----------------------------------------------------------------- {{{
