@@ -2,7 +2,7 @@
 "          FILE: .vimrc
 "   DESCRIPTION: Vim configuration file
 "        AUTHOR: Sorin Ionescu <sorin.ionescu@gmail.com>
-"       VERSION: 1.3.23
+"       VERSION: 1.3.24
 " ----------------------------------------------------------------------------
 
 " Version Check ---------------------------------------------------------- {{{
@@ -1632,16 +1632,15 @@ cabbr lcdf lcd %:p:h<CR>
 " Open URL --------------------------------------------------------------- {{{
 
 command! -bar -nargs=1 OpenURL :!open <args>
-function! OpenURL()
-    let s:uri = matchstr(getline("."), '[a-z]*:\/\/[^ >,;:]*')
-    echo s:uri
-    if s:uri != ""
-        exec "!open \"" . s:uri . "\""
+function! OpenURLUnderCursor()
+    let l:uri = matchstr(getline("."), '[a-z]*:\/\/[^ >,;:]*')
+    if l:uri != ""
+        exec '!open "' . l:uri . '"'
     else
-        echo "No URI found in line"
+        echo 'No URL found in line'
     endif
 endfunction
-map <Leader>w :call OpenURL()<CR>
+nmap <silent> <Leader>w :call OpenURLUnderCursor()<CR>
 
 " }}}
 " Error Toggle ----------------------------------------------------------- {{{
