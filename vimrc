@@ -2,7 +2,7 @@
 "          FILE: .vimrc
 "   DESCRIPTION: Vim configuration file
 "        AUTHOR: Sorin Ionescu <sorin.ionescu@gmail.com>
-"       VERSION: 1.3.25
+"       VERSION: 1.3.26
 " ----------------------------------------------------------------------------
 
 " Version Check ---------------------------------------------------------- {{{
@@ -453,10 +453,10 @@ try
     " Use a dark theme if luminance is less than 30%.
     if luminance < (65535 * 0.3)
 	set background=dark
-        colorscheme Tomorrow-Night
+        colorscheme solarized
     else
         set background=light
-        colorscheme Tomorrow
+        colorscheme solarized
     endif
 catch
     echo 'Error: Could not set prefered color scheme'
